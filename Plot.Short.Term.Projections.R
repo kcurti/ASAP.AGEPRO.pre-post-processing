@@ -13,7 +13,8 @@ ls()
 # Run details
 run.no <- '4'
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
-model.ests.name <- 'median.annual.ests' # 'median.annual.ests' or 'annual.ests'
+estimate.type <- 'point.est'   # 'median' or 'point.est'
+                               #  i.e the median MCMC estimates or the ASAP point estimates 
 
 
 # Projection details
@@ -60,30 +61,27 @@ catch.brp <- brp.env$msy.brp
 load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
 
 # Model estimates
-model.ests <- cbind.data.frame( get(model.ests.name)[,c('SSB','January 1 B')], t(asap$catch.obs) )
-  colnames(model.ests) <- c('ssb','biomass','catch')
-
-# MCMC results
-# ssb.mcmc <- ssb.ests
-# biomass.mcmc <- biomass.ests  
-# f.ests
-  
-
-
-# proj.run <- 'Rect.2009.Onward'
-# proj.run.list <-c('F.msy.proxy','F.status.quo','F.zero')
-#   names(proj.run.list) <- c('F = msy proxy','F = status quo', 'F = 0')
+if(estimate.type == 'point.est')
+{
+  model.ests <- cbind.data.frame(        annual.ests[,c('SSB','January 1 B')], t(asap$catch.obs) )
+}
+if(estimate.type == 'median')
+{
+  model.ests <- cbind.data.frame( median.annual.ests[,c('SSB','January 1 B')], t(asap$catch.obs) )
+}
+colnames(model.ests) <- c('ssb','biomass','catch')
 
 
 
-# Create template list for projections
+### Create template list for projections
 proj.template <- vector('list',n.proj)
   names(proj.template) <- proj.run.list
   
 # Base projection directory
 base.proj.dir <- file.path(run.dir, proj.master.folder)
 
-# Fill template for ssb, January 1 biomass and catch
+
+### Fill template for ssb, January 1 biomass and catch
 ssb.proj     <- proj.template
 biomass.proj <- proj.template
 catch.proj   <- proj.template
@@ -104,14 +102,14 @@ for (proj.run in proj.run.list)
 }
 
 
-# For a given variable, merge base run estimates (either point estimates from ASAP output or MCMC medians) with MCMC CIs and short-term projections 
+### For a given variable, merge base run estimates (either point estimates from ASAP output or MCMC medians) with MCMC CIs and short-term projections 
 plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.location)
 {
   # var.name <- 'ssb'; yaxis.label <- 'SSB (mt)'; plot.fyr <- 2000
 
   # Get ASAP and MCMC estimates
   var.asap <- model.ests[,var.name,drop=FALSE]
-    colnames(var.asap) <- 'Median'
+    colnames(var.asap) <- 'Estimate'
   if(var.name %in% c('ssb','biomass'))  { 
     mcmc <- get(paste(var.name,'ests',sep='.'))[,c('X5th','X95th')] 
   }  else {
@@ -137,9 +135,9 @@ plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.
   par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
   
   # ASAP point estimates and MCMC
-  plot ( merged.asap$Year, merged.asap[,'Median'], lwd=2, col='black', xlim=x.lim, ylim=y.lim, axes=FALSE, type="l" )
-    lines( merged.asap$Year, merged.asap[,'X5th'], lty=2, col='black', lwd=2 ) 
-    lines( merged.asap$Year, merged.asap[,'X95th'], lty=2, col='black', lwd=2 ) 
+  plot ( merged.asap$Year, merged.asap[,'Estimate'], lwd=2, col='black', xlim=x.lim, ylim=y.lim, axes=FALSE, type="l" )
+  lines( merged.asap$Year, merged.asap[,'X5th'], lty=2, col='black', lwd=2 ) 
+  lines( merged.asap$Year, merged.asap[,'X95th'], lty=2, col='black', lwd=2 ) 
 
   # Projections
   for (i in 1:n.proj)
@@ -148,7 +146,7 @@ plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.
     proj.run <- proj.run.list[i]
 
     x.vec <- as.numeric(c(lyr,proj.yrs))
-    y.vec <- cbind(merged.asap[as.character(lyr),'Median'], as.vector(proj.series[[proj.run]]['Median',]))
+    y.vec <- cbind(merged.asap[as.character(lyr),'Estimate'], as.vector(proj.series[[proj.run]]['Median',]))
     lines(x.vec, y.vec, col=color.list[i], lty=1, lwd=2)
 
     l.ci <- cbind(merged.asap[as.character(lyr),'X5th'], proj.series[[proj.run]]['5th Percentile',])

@@ -12,7 +12,8 @@ run.no <- '4'
 proj.run <- 'Rect.1975.Onward'
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
 
-plot.data.name <- 'median.annual.ests' # 'median.annual.ests' or 'annual.ests'
+estimate.type <- 'point.est'   # 'median' or 'point.est'
+                               #  i.e the median MCMC estimates or the ASAP point estimates 
 
 save.fig <- 'y'
 
@@ -29,13 +30,12 @@ output.dir <- file.path(run.dir,'outputs')
 load( file.path(proj.dir, 'Projection.summary.RDATA') )
 load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
 
-# term.yr.cis <- read.csv( file.path(output.dir,paste('Run',run.no,'.Terminal.yr.estimates.with.CIs.csv',sep='')), row.names=1)
 fmort.name <- rownames(terminal.yr.ests)[4]
 
 
-
-### Annual estimates to use in the plot (specified above as annual.ests or median.annual.ests)
-plot.data <- as.matrix(get(plot.data.name))
+### Annual estimates to use in the plot (specified above as either the median MCMC estimates or the ASAP point estimates)
+if(estimate.type == 'median')    { plot.data <- as.matrix(median.annual.ests) }
+if(estimate.type == 'point.est') { plot.data <- as.matrix(annual.ests) }
 
 # Fyr and Lyr SSB and F estimates for plot labels
 ssb.label.ests <- plot.data[as.character(c(fyr,lyr)),'SSB'] / 1000

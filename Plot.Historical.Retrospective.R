@@ -13,12 +13,14 @@ run.no <- '4'
 
 
 net.dir <- '//net.nefsc.noaa.gov/home0/kcurti'
-# Modeling directory
+# Network modeling directory (containing previous assessments)
 modeling.dir <- file.path(net.dir, 'Mackerel/Modeling')
 # Current assessment name
 current.assess <- '2021.Management.Track'
   names(current.assess) <- 'MT.2021'
-
+estimate.type <- 'point.est'   # 'median' or 'point.est'
+                               # i.e the median MCMC estimates or the ASAP point estimates 
+  
 # Vector of previous assessment names to include (that are not in the historical assessment spreadsheet); These names correspond to the modeling folder name
 prev.assess <- '2017.Benchmark'
   names(prev.assess) <- 'Bench.2017'
@@ -27,7 +29,7 @@ final.runs <- prev.assess
   final.runs['Bench.2017'] <- 'Run118'
 
 # Directory for current assessment
-  current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
  
    
 ########################################################
@@ -38,11 +40,21 @@ run.wd <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.wd,'outputs')
 current.assess.env <- new.env()
 load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')), envir=current.assess.env )
-# current.ests <- current.assess.env$annual.ests
+
 current.ests <- vector('list',3)
   names(current.ests) <- c('SSB','F','Rect')
-current.ests[['SSB']] <- current.assess.env$ssb.ests   
-current.ests[['F']]   <- current.assess.env$f.ests
+if(estimate.type == 'point.est')
+{
+  current.ests[['SSB']] <- cbind.data.frame(current.assess.env$annual.ests[,'SSB',drop=FALSE], current.assess.env$ssb.ests[,c('X5th','X95th')])
+  current.ests[['F']]   <- cbind.data.frame(current.assess.env$annual.ests[,'F',  drop=FALSE], current.assess.env$f.ests  [,c('X5th','X95th')])
+}
+if(estimate.type == 'median')
+{
+  current.ests[['SSB']] <- current.assess.env$ssb.ests   
+    colnames(current.ests[['SSB']])[colnames(current.ests[['SSB']])=='Median'] <- 'SSB'
+  current.ests[['F']]   <- current.assess.env$f.ests
+    colnames(current.ests[['F']])  [colnames(current.ests[['F']])  =='Median'] <- 'F'
+}
 current.ests[['Rect']] <- data.frame(current.assess.env$annual.ests[,'Rect',drop=FALSE])
 current.yrs <- rownames(current.ests[[1]])
 
@@ -101,7 +113,7 @@ plot.F <- function(include.saw42, write.xlab)
 
   ymax <- max(c(current.ests.var$X95th, unlist(all.prev.ests.var)), na.rm=TRUE)
 
-  plot(current.yrs, current.ests.var$Median, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
+  plot(current.yrs, current.ests.var$F, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
   polygon(x = c(current.yrs, rev(current.yrs)),
           y = c(current.ests.var$X5th, rev(current.ests.var$X95th)),
           col =  adjustcolor("darkslategrey", alpha.f = 0.20), border = NA)
@@ -127,7 +139,7 @@ plot.SSB <- function(include.saw42, write.xlab)
   
   ymax <- max(c(current.ests.var$X95th, unlist(all.prev.ests.var)), na.rm=TRUE)
   
-  plot(current.yrs, current.ests.var$Median, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
+  plot(current.yrs, current.ests.var$SSB, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
   polygon(x = c(current.yrs, rev(current.yrs)),
           y = c(current.ests.var$X5th, rev(current.ests.var$X95th)),
           col =  adjustcolor("darkslategrey", alpha.f = 0.20), border = NA)

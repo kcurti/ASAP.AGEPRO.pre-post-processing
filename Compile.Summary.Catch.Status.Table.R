@@ -9,7 +9,8 @@ run.no <- '4'
 net.dir <- c('//net.nefsc.noaa.gov/home0/kcurti')
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
 
-model.ests.name <- 'median.annual.ests' # 'median.annual.ests' or 'annual.ests'
+estimate.type <- 'point.est'   # 'median' or 'point.est'
+                               #  i.e the median MCMC estimates or the ASAP point estimates 
 
 
 #######################
@@ -26,8 +27,8 @@ table.yrs <- as.character((lyr-9):lyr)
 avg.yrs <- as.character(fyr:lyr)
 
 # Obtain model estimates for table
-model.ests <- get(model.ests.name)
-
+if(estimate.type == 'point.est') {model.ests <- annual.ests}
+if(estimate.type == 'median')    {model.ests <- median.annual.ests}
 
 # Create table to be filled
 status <- data.frame(matrix(NA,nrow=9,ncol=14))
@@ -103,6 +104,5 @@ status['can.catch',c('Mean')]      <- round( mean( totc.env$totc.final[avg.yrs,'
 ### Save outputs
 save.image(file.path(output.dir,'Summary.Catch.Status.Table.RDATA'))
 write.csv(status, file.path(output.dir,'Summary.Catch.Status.Table.csv'), row.names=FALSE, na='')
-
 
 
