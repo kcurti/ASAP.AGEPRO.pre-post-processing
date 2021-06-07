@@ -6,8 +6,11 @@ This repository contains R code for post-processing ASAP output, getting the dat
 The following programs require a specific file structure for the modeling directory.
 
 current.assess.dir
+
 current.assess.dir/RunXXX
+
 current.assess.dir/RunXXX/retro
+
 current.assess.dir/RunXXX/mcmc.2000.it.1000.thin
 
 .... and require that the programs are run in the following order
