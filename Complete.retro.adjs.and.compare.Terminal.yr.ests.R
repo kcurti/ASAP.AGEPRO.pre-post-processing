@@ -62,16 +62,16 @@ f.max   <- max(cbind(term.yr.f, rho.adj.f))
 
 windows(width=5,height=4)
 par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
-plot(term.yr.ssb.tmt['Median'], term.yr.f['Median'], axes=FALSE, xlim=c(0,ssb.max), ylim=c(0,f.max), xlab='', ylab='', pch=16)
-arrows(term.yr.ssb.tmt['5th percentile'],  term.yr.f['Median'],
-       term.yr.ssb.tmt['95th percentile'], term.yr.f['Median'], length=0.05, angle=90, code=3, col='black')
-arrows(term.yr.ssb.tmt['Median'],  term.yr.f['5th percentile'],
-       term.yr.ssb.tmt['Median'],  term.yr.f['95th percentile'], length=0.05, angle=90, code=3, col='black')
-lines(rho.adj.ssb.tmt['Median'], rho.adj.f['Median'], type='p', pch=16, col='black')
-arrows(rho.adj.ssb.tmt['5th percentile'],  rho.adj.f['Median'],
-       rho.adj.ssb.tmt['95th percentile'], rho.adj.f['Median'], length=0.05, angle=90, code=3, col='black', lty=2)
-arrows(rho.adj.ssb.tmt['Median'],  rho.adj.f['5th percentile'],
-       rho.adj.ssb.tmt['Median'],  rho.adj.f['95th percentile'], length=0.05, angle=90, code=3, col='black', lty=2)
+plot(term.yr.ssb.tmt['Estimate'], term.yr.f['Estimate'], axes=FALSE, xlim=c(0,ssb.max), ylim=c(0,f.max), xlab='', ylab='', pch=16)
+arrows(term.yr.ssb.tmt['5th percentile'],  term.yr.f['Estimate'],
+       term.yr.ssb.tmt['95th percentile'], term.yr.f['Estimate'], length=0.05, angle=90, code=3, col='black')
+arrows(term.yr.ssb.tmt['Estimate'],  term.yr.f['5th percentile'],
+       term.yr.ssb.tmt['Estimate'],  term.yr.f['95th percentile'], length=0.05, angle=90, code=3, col='black')
+lines(rho.adj.ssb.tmt['Estimate'], rho.adj.f['Estimate'], type='p', pch=16, col='black')
+arrows(rho.adj.ssb.tmt['5th percentile'],  rho.adj.f['Estimate'],
+       rho.adj.ssb.tmt['95th percentile'], rho.adj.f['Estimate'], length=0.05, angle=90, code=3, col='black', lty=2)
+arrows(rho.adj.ssb.tmt['Estimate'],  rho.adj.f['5th percentile'],
+       rho.adj.ssb.tmt['Estimate'],  rho.adj.f['95th percentile'], length=0.05, angle=90, code=3, col='black', lty=2)
 axis(side=1, at=axTicks(1), labels=TRUE, cex.axis=0.8, padj = -0.5)
 axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
 box()
@@ -83,12 +83,12 @@ if(save.fig) {savePlot(file=file.path(output.dir, paste("Terminal.yr.and.Retro.a
 ### Confirm whether retro adjustment is needed based on terminal year CIs and retro adjusted values
 retro.adj.needed <- FALSE
 if(
-  rho.adj.ssb.tmt['Median'] < term.yr.ssb.tmt['5th percentile']  | 
-  rho.adj.ssb.tmt['Median'] > term.yr.ssb.tmt['95th percentile']
+  rho.adj.ssb.tmt['Estimate'] < term.yr.ssb.tmt['5th percentile']  | 
+  rho.adj.ssb.tmt['Estimate'] > term.yr.ssb.tmt['95th percentile']
   ) {retro.adj.needed <- TRUE}
 if(
-  rho.adj.f['Median'] < rho.adj.f['5th percentile']  | 
-  rho.adj.f['Median'] > rho.adj.f['95th percentile']
+  rho.adj.f['Estimate'] < rho.adj.f['5th percentile']  | 
+  rho.adj.f['Estimate'] > rho.adj.f['95th percentile']
 ) {retro.adj.needed <- TRUE}
 retro.adj.needed
 

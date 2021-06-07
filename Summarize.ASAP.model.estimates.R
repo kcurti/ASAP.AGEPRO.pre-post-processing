@@ -56,23 +56,12 @@ annual.ests[,'F'] <- round(annual.ests[,'F'], 3)
 fishery.sel <- unique(asap$fleet.sel.mats$sel.m.fleet1)
 
 
-# # Terminal year estimates
-# terminal.yr.ests <- data.frame(matrix(NA,nrow=4, ncol=1))
-#   colnames(terminal.yr.ests) <- 'Estimate'
-#   rownames(terminal.yr.ests) <- c('SSB.mt', 'Jan1B.mt', 'Rect.thous', 'Avg.F')
-# terminal.yr.ests['SSB.mt',] <- annual.ests[as.character(lyr),'SSB']
-# terminal.yr.ests['Jan1B.mt',] <- annual.ests[as.character(lyr),'January 1 B']
-# terminal.yr.ests['Rect.thous',] <- annual.ests[as.character(lyr),'Rect']
-# terminal.yr.ests['Avg.F',] <- annual.ests[as.character(lyr),'F']
-
-
 # Output csv files for assessment tables
 write.csv(round(asap$N.age/1000,2) , file.path(output.dir, paste('Run',run.no,'.N.age.millions.csv',sep='')) )
 write.csv(round(asap$F.age,3) , file.path(output.dir, paste('Run',run.no,'.F.age.csv',sep='')) )
 write.csv(annual.ests , file.path(output.dir, paste('Run',run.no,'.Annual.estimates.csv',sep='')) )
 write.csv(round(t(fishery.sel),2) , file.path(output.dir, paste('Run',run.no,'.Fishery.selectivity.csv',sep='')) )
-# write.csv(terminal.yr.ests, file.path(output.dir, paste('Run',run.no,'.Terminal.yr.estimates.csv',sep='')) )
-  
+
  
 # Save final workspace
 save.image( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.RDATA',sep='')) )
@@ -92,5 +81,4 @@ current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.M
 run.dir <- paste('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling/Run',run.no,sep='')
 output.dir <- file.path(run.dir,'outputs')
 load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.RDATA',sep='')) )
-
 

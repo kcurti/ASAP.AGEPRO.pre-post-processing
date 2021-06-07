@@ -2,6 +2,7 @@
 #
 # Builds off of workspace created in Summarize.ASAP.Model.estimates.R
 # Takes the MCMC results and summarizes the 90% CIs
+# Estimate.type specifies whether to use the ASAP point estimates or the MCMC medians for the final estimates; The code always uses the MCMC 90% CIs
 # Program used to be called Terminal.yr.ests.and.CIs.R during 2017 benchmark
 #
 #######
@@ -15,6 +16,8 @@ run.no <- '4'
 mcmc.folder.name <- 'mcmc.2000.it.1000.thin'
 
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+
+estimate.type <- 'point.est'   # 'median' or 'point.est'
 
 
 #######################
@@ -47,13 +50,24 @@ median.annual.ests <- cbind.data.frame(ssb.ests[,'Median',drop=FALSE], biomass.e
 ### Terminal year estimates with CIs
 terminal.yr.ests <- data.frame(matrix(NA,4,3)) 
   rownames(terminal.yr.ests) <- c('SSB.mt', 'Jan1B.mt', 'Rect.thous', 'Avg.F')
-  colnames(terminal.yr.ests) <- c('Median', '5th percentile','95th percentile')
+  colnames(terminal.yr.ests) <- c('Estimate','5th percentile','95th percentile')
 
-terminal.yr.ests['SSB.mt',  ] <- ssb.ests[    as.character(lyr),c('Median','X5th','X95th')]
-terminal.yr.ests['Jan1B.mt',] <- biomass.ests[as.character(lyr),c('Median','X5th','X95th')]
-terminal.yr.ests['Avg.F',   ] <- round(f.ests[as.character(lyr),c('Median','X5th','X95th')], 3)
-terminal.yr.ests['Rect.thous',] <- quantile(NAA.ests.lyr[,1], c(0.5, 0.05, 0.95))
+if(estimate.type == 'median')
+{
+  terminal.yr.ests['SSB.mt',  ] <- ssb.ests[    as.character(lyr),c('Median','X5th','X95th')]
+  terminal.yr.ests['Jan1B.mt',] <- biomass.ests[as.character(lyr),c('Median','X5th','X95th')]
+  terminal.yr.ests['Avg.F',   ] <- round(f.ests[as.character(lyr),c('Median','X5th','X95th')], 3)
+  terminal.yr.ests['Rect.thous',] <- quantile(NAA.ests.lyr[,1], c(0.5, 0.05, 0.95))
+}
 
+if(estimate.type == 'point.est')
+{
+  terminal.yr.ests['SSB.mt',  ] <- c( annual.ests[as.character(lyr),'SSB'],         ssb.ests[    as.character(lyr),c('X5th','X95th')] )       
+  terminal.yr.ests['Jan1B.mt',] <- c( annual.ests[as.character(lyr),'January 1 B'], biomass.ests[as.character(lyr),c('X5th','X95th')] )
+  terminal.yr.ests['Avg.F',   ] <- c( annual.ests[as.character(lyr),'F'],           round(f.ests[as.character(lyr),c('X5th','X95th')], 3) )           
+  terminal.yr.ests['Rect.thous',] <- c( annual.ests[as.character(lyr),'Rect'], quantile(NAA.ests.lyr[,1], c(0.05, 0.95)) )
+}
+  
 
 ### Formatted table
 terminal.yr.ests.formatted <- terminal.yr.ests
@@ -63,7 +77,7 @@ terminal.yr.ests.formatted <- terminal.yr.ests
 ### Save and output
 save.image( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
 write.csv(terminal.yr.ests.formatted, file.path(output.dir, paste('Run',run.no,'.Terminal.yr.estimates.with.CIs.csv',sep='')) )
-write.csv(median.annual.ests, file.path(output.dir, paste('Run',run.no,'.Annual.Estimates.From.MCMC.csv',sep='')) )
+write.csv(median.annual.ests, file.path(output.dir, paste('Run',run.no,'.Annual.Median.Estimates.From.MCMC.csv',sep='')) )
 
 
 
@@ -80,5 +94,4 @@ current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.M
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.dir,'outputs')
 load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
-
 
