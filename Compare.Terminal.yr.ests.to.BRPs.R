@@ -166,7 +166,7 @@ ls()
 
 run.no <- '4'
 
-run.dir <- paste('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling/Run',run.no,sep='')
+run.dir <- paste('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling/Run',run.no,sep='') 
 output.dir <- file.path(run.dir,'outputs')
 
 load(file.path(output.dir, 'Comparison.with.BRPs.RDATA'))
