@@ -46,8 +46,11 @@ calc.rho.adj.ests <- function(orig.ests, rho)
 
 
 ### Calculate adjusted SSB and F
-rho.adj.ssb <- calc.rho.adj.ests(term.yr.ssb, retro.rho.values['Mohn.rho','ssb.rho'])
-rho.adj.f   <- calc.rho.adj.ests(term.yr.f,   retro.rho.values['Mohn.rho','f.rho'])
+mohns.rho.ssb <- retro.rho.values['Mohn.rho','ssb.rho']
+mohns.rho.f <-   retro.rho.values['Mohn.rho','f.rho']
+
+rho.adj.ssb <- calc.rho.adj.ests(term.yr.ssb, mohns.rho.ssb)
+rho.adj.f   <- calc.rho.adj.ests(term.yr.f,   mohns.rho.f)
 rho.adj.ests <- rbind.data.frame('SSB.mt'=t(rho.adj.ssb), 'Avg.F'=t(round(rho.adj.f,3)))
 
 
@@ -104,5 +107,24 @@ if(retro.adj.needed==TRUE)
 
 ### Save final workspace
 save.image( file.path(output.dir, paste('Run',run.no,'.Retrospective.Analysis.RDATA',sep='')) )
+
+
+
+##########################################
+
+
+
+rm(list=ls())
+ls()
+
+
+run.no <- '4'
+current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
+
+
+run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+output.dir <- file.path(run.dir,'outputs')
+load( file.path(output.dir, paste('Run',run.no,'.Retrospective.Analysis.RDATA',sep='')) )
+
 
 
