@@ -17,17 +17,19 @@ run.no <- '4'
 retro <- 'y'
 mcmc <- 'n'
 
-wd <- paste('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling/Run',run.no,sep='')
+current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
+base.wd <- file.path(current.assess.dir,paste('Run',run.no,sep=''))
+wd <- base.wd
 
 asap.name <- paste('Run',run.no,sep='')
 
 
 if(retro=='y')  {
-  wd <- file.path(paste('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling/Run',run.no,sep=''),'retro')
+  wd <- file.path(base.wd,'retro')
   asap.name <- paste('Run',run.no,'.RETRO',sep='')
 }
 if(mcmc=='y')  {
-  wd <- file.path(paste('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling/Run',run.no,sep=''),'mcmc.2000.it.1000.thin')
+  wd <- file.path(base.wd,'mcmc.2000.it.1000.thin')
   asap.name <- paste('Run',run.no,'.MCMC',sep='')
 }
 
