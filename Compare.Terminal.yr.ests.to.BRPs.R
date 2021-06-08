@@ -166,9 +166,7 @@ ls()
 
 run.no <- '4'
 
-current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track/')
-
-run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+run.dir <- paste('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling/Run',run.no,sep='')
 output.dir <- file.path(run.dir,'outputs')
 
 load(file.path(output.dir, 'Comparison.with.BRPs.RDATA'))
