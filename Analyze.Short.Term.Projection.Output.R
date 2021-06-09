@@ -113,10 +113,11 @@ ls()
 
 # Run details
 run.no <- '4'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+#current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
 
 # Projection details
-proj.master.folder <- 'projections.3year'
+proj.master.folder <- 'projections.2year'
 proj.run <- 'Rect.1975.Onward'
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
@@ -124,5 +125,6 @@ proj.master.dir <- file.path(run.dir, proj.master.folder)
 proj.dir <- file.path(proj.master.dir,proj.run)
 
 load(file.path(proj.dir, 'Projection.summary.RDATA'))
+
 
 
