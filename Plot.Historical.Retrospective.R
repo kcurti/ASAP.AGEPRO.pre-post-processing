@@ -210,3 +210,21 @@ rm(list=ls())
 ls()
 
 
+# ASAP details
+run.no <- '4'
+
+
+net.dir <- '//net.nefsc.noaa.gov/home0/kcurti'
+# Network modeling directory (containing previous assessments)
+modeling.dir <- file.path(net.dir, 'Mackerel/Modeling')
+current.assess.dir <- file.path(modeling.dir, '2021.Management.Track')
+
+# Current assessment name
+run.wd <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+output.dir <- file.path(run.wd,'outputs')
+
+
+load(file.path(output.dir,'Historical.retrospective.comparison.RDATA'))
+
+
+
