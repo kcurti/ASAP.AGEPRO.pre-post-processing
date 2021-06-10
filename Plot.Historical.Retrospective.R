@@ -103,18 +103,19 @@ color.list <- c("magenta3", "limegreen", "midnightblue", "gold2", "steelblue1", 
  
 ### Functions to plot F, SSB and Recruitment
 
-plot.F <- function(include.saw42, write.xlab)
+plot.F <- function(include.saw42, write.xlab, plot.fyr)
 {
-  # include.saw42 <- FALSE, write.xlab <- TRUE
+  # include.saw42 <- FALSE; write.xlab <- TRUE; plot.fyr <- 1969
  
-  current.ests.var <- current.ests[['F']]
-  all.prev.ests.var <- lapply(c(prev.ests, hist.ests), function(x) {data.frame(x[,'F',drop=FALSE])})
+  plot.yrs <- as.character(plot.fyr:tail(current.yrs,1))
+  current.ests.var <- current.ests[['F']][plot.yrs,]
+  all.prev.ests.var <- lapply(c(prev.ests, hist.ests), function(x) {data.frame(x[plot.yrs,'F',drop=FALSE])})
     if(!include.saw42) {all.prev.ests.var <- all.prev.ests.var[!names(all.prev.ests.var)=='SAW42']}
 
   ymax <- max(c(current.ests.var$X95th, unlist(all.prev.ests.var)), na.rm=TRUE)
 
-  plot(current.yrs, current.ests.var$F, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
-  polygon(x = c(current.yrs, rev(current.yrs)),
+  plot(plot.yrs, current.ests.var$F, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
+  polygon(x = c(plot.yrs, rev(plot.yrs)),
           y = c(current.ests.var$X5th, rev(current.ests.var$X95th)),
           col =  adjustcolor("darkslategrey", alpha.f = 0.20), border = NA)
   for (i in 1:length(all.prev.ests.var))
@@ -129,18 +130,19 @@ plot.F <- function(include.saw42, write.xlab)
 } 
 
 
-plot.SSB <- function(include.saw42, write.xlab)
+plot.SSB <- function(include.saw42, write.xlab, plot.fyr)
 {
-  # include.saw42 <- FALSE, write.xlab <- TRUE; 
+  # include.saw42 <- FALSE, write.xlab <- TRUE; plot.fyr <- 1969
   
-  current.ests.var <- current.ests[['SSB']]/1000
-  all.prev.ests.var <- lapply(c(prev.ests, hist.ests), function(x) {data.frame(x[,'SSB',drop=FALSE])/1000})
+  plot.yrs <- as.character(plot.fyr:tail(current.yrs,1))
+  current.ests.var <- current.ests[['SSB']][plot.yrs,]/1000
+  all.prev.ests.var <- lapply(c(prev.ests, hist.ests), function(x) {data.frame(x[plot.yrs,'SSB',drop=FALSE])/1000})
   if(!include.saw42) {all.prev.ests.var <- all.prev.ests.var[!names(all.prev.ests.var)=='SAW42']}
   
   ymax <- max(c(current.ests.var$X95th, unlist(all.prev.ests.var)), na.rm=TRUE)
   
-  plot(current.yrs, current.ests.var$SSB, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
-  polygon(x = c(current.yrs, rev(current.yrs)),
+  plot(plot.yrs, current.ests.var$SSB, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
+  polygon(x = c(plot.yrs, rev(plot.yrs)),
           y = c(current.ests.var$X5th, rev(current.ests.var$X95th)),
           col =  adjustcolor("darkslategrey", alpha.f = 0.20), border = NA)
   for (i in 1:length(all.prev.ests.var))
@@ -155,17 +157,18 @@ plot.SSB <- function(include.saw42, write.xlab)
 } 
 
 
-plot.Rect <- function(include.saw42, write.xlab)
+plot.Rect <- function(include.saw42, write.xlab, plot.fyr)
 {
-  current.ests.var <- current.ests[['Rect']] / 1000
-  prev.ests.var <- lapply(c(prev.ests), function(x) {data.frame(x[,'Rect',drop=FALSE]/1000)})
-  hist.ests.var <- lapply(c(hist.ests), function(x) {data.frame(x[,'Rect',drop=FALSE])})
+  plot.yrs <- as.character(plot.fyr:tail(current.yrs,1))
+  current.ests.var <- current.ests[['Rect']][plot.yrs,,drop=FALSE] / 1000
+  prev.ests.var <- lapply(c(prev.ests), function(x) {data.frame(x[plot.yrs,'Rect',drop=FALSE]/1000)})
+  hist.ests.var <- lapply(c(hist.ests), function(x) {data.frame(x[plot.yrs,'Rect',drop=FALSE])})
     if(!include.saw42) {hist.ests.var <- hist.ests.var[!names(hist.ests.var)=='SAW42']}
   all.prev.ests.var <- c(prev.ests.var, hist.ests.var)
 
   ymax <- max(c(current.ests.var$X95th, unlist(all.prev.ests.var)), na.rm=TRUE)
 
-  plot(current.yrs, current.ests.var$Rect, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
+  plot(plot.yrs, current.ests.var$Rect, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
   for (i in 1:length(all.prev.ests.var))
   {
     assess.data <- all.prev.ests.var[[i]]
@@ -184,17 +187,30 @@ include.saw42 <- FALSE
 assess.name.labels <- c(current.assess, prev.assess, hist.assess)
 assess.name.labels <- if(!include.saw42) {assess.name.labels[(!names(assess.name.labels)%in%'SAW42')]}
 
+plot.fyr <- '1968'
 windows(height=8.0, width=5.0)
 par(mfcol=c(3,1))
 par(mar=c(0.5, 2.7, 1.3, 1) +0.1);  par(oma=c(4.5,2.2,0.5,0)) # Horizontal y-axis
-plot.SSB(include.saw42, write.xlab <- FALSE)
+plot.SSB(include.saw42, write.xlab <- FALSE, plot.fyr)
 legend('topright', assess.name.labels, bty="n", col=c('black',color.list[1:(length(assess.name.labels)-1)]),cex=1.0,lwd=2) 
-plot.F(include.saw42, write.xlab <- FALSE)
-plot.Rect(include.saw42, write.xlab <- TRUE)
+plot.F(include.saw42, write.xlab <- FALSE, plot.fyr)
+plot.Rect(include.saw42, write.xlab <- TRUE, plot.fyr)
 mtext('Year', side=1, line=3, cex=0.8) 
 # Cannot save as wmf due to use of polygon
-if(save.fig=='y') {savePlot(file.path(output.dir,'Historical.retrospective.png'),type='png')}
+if(save.fig=='y') {savePlot(file.path(output.dir,paste('Historical.retrospective.fyr',plot.fyr,'png',sep='.')),type='png')}
 
+
+plot.fyr <- '2000'
+windows(height=8.0, width=5.0)
+par(mfcol=c(3,1))
+par(mar=c(0.5, 2.7, 1.3, 1) +0.1);  par(oma=c(4.5,2.2,0.5,0)) # Horizontal y-axis
+plot.SSB(include.saw42, write.xlab <- FALSE, plot.fyr)
+legend('topright', assess.name.labels, bty="n", col=c('black',color.list[1:(length(assess.name.labels)-1)]),cex=1.0,lwd=2) 
+plot.F(include.saw42, write.xlab <- FALSE, plot.fyr)
+plot.Rect(include.saw42, write.xlab <- TRUE, plot.fyr)
+mtext('Year', side=1, line=3, cex=0.8) 
+# Cannot save as wmf due to use of polygon
+if(save.fig=='y') {savePlot(file.path(output.dir,paste('Historical.retrospective.fyr',plot.fyr,'png',sep='.')),type='png')}
 
 
 ### Save final workspace
