@@ -213,6 +213,19 @@ mtext('Year', side=1, line=3, cex=0.8)
 if(save.fig=='y') {savePlot(file.path(output.dir,paste('Historical.retrospective.fyr',plot.fyr,'png',sep='.')),type='png')}
 
 
+plot.fyr <- '2010'
+windows(height=8.0, width=5.0)
+par(mfcol=c(3,1))
+par(mar=c(0.5, 2.7, 1.3, 1) +0.1);  par(oma=c(4.5,2.2,0.5,0)) # Horizontal y-axis
+plot.SSB(include.saw42, write.xlab <- FALSE, plot.fyr)
+legend('topright', assess.name.labels, bty="n", col=c('black',color.list[1:(length(assess.name.labels)-1)]),cex=1.0,lwd=2) 
+plot.F(include.saw42, write.xlab <- FALSE, plot.fyr)
+plot.Rect(include.saw42, write.xlab <- TRUE, plot.fyr)
+mtext('Year', side=1, line=3, cex=0.8) 
+# Cannot save as wmf due to use of polygon
+if(save.fig=='y') {savePlot(file.path(output.dir,paste('Historical.retrospective.fyr',plot.fyr,'png',sep='.')),type='png')}
+
+
 ### Save final workspace
 save.image(file.path(output.dir,'Historical.retrospective.comparison.RDATA'))
 
