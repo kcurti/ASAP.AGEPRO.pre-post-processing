@@ -12,7 +12,9 @@ ls()
 
 # Run details
 run.no <- '4'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+# current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
+
 estimate.type <- 'point.est'   # 'median' or 'point.est'
                                #  i.e the median MCMC estimates or the ASAP point estimates 
 
@@ -20,15 +22,17 @@ estimate.type <- 'point.est'   # 'median' or 'point.est'
 # Projection details
 brp.run <- 'Rect.1975.Onward'
 
+proj.nyr.name <- '2year' 
+rect.scenarios <- c('Rect.1975', 'Rect.1999', 'Rect.2009')
+f.name <- 'F.zero' # 'Fmsy.proxy' 'F.zero'
+
+nsim <- 100
 proj.fyr <- 2020
 proj.lyr <- 2023
 
-rect.scenarios <- c('Rect.1975', 'Rect.1999', 'Rect.2009')
-proj.master.folder <- 'projections.2year'
-proj.run.list   <- paste(rect.scenarios, 'Onward', sep='.')
-  # Names are used for the figures legend
-  names(proj.run.list) <- apply(do.call(rbind, strsplit(proj.run.list, "\\.")), 1, function(x) {paste(x[2:3], collapse=' ')})
-proj.fname.list <- paste('PROJECTIONS.2YEAR.100.SIMS.FMSY.PROXY', toupper(rect.scenarios), sep='.')
+
+# Final workspace name
+rdata.name <- 'Rect.scenarios.with.F.zero'
 
 
 # Figure details
@@ -41,6 +45,13 @@ color.list <- c("magenta3", "limegreen", "steelblue1", "gold2", "midnightblue", 
 
 
 
+proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
+proj.run.list   <- paste(rect.scenarios, 'Onward', sep='.')
+  # Names are used for the figures legend
+  names(proj.run.list) <- paste(do.call(rbind, strsplit(rect.scenarios, "\\."))[,2], 'Onward')
+
+proj.fname.list <- paste('PROJECTIONS', toupper(proj.nyr.name), nsim, 'SIMS', toupper(rect.scenarios), toupper(f.name), sep='.')
+
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.dir,'outputs')
 
@@ -49,7 +60,7 @@ n.proj <- length(proj.run.list)
 
 
 ### BRPs
-brp.env <-new.env()
+brp.env <- new.env()
 load( file.path(run.dir, 'projections.brps', brp.run, 'Projection.summary.RDATA'), envir=brp.env )
 ssb.brp <- brp.env$ssb.brp 
 f.brp <- brp.env$fmult.brp
@@ -58,19 +69,23 @@ catch.brp <- brp.env$msy.brp
 
 
 ### Base run and MCMC results
-load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
+asap.env <- new.env()
+load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')), envir=asap.env )
+fyr <- asap.env$fyr
+lyr <- asap.env$lyr
 
 # Model estimates
 if(estimate.type == 'point.est')
 {
-  model.ests <- cbind.data.frame(        annual.ests[,c('SSB','January 1 B')], t(asap$catch.obs) )
+  model.ests <- cbind.data.frame(        asap.env$annual.ests[,c('SSB','January 1 B')], t(asap.env$asap$catch.obs) )
 }
 if(estimate.type == 'median')
 {
-  model.ests <- cbind.data.frame( median.annual.ests[,c('SSB','January 1 B')], t(asap$catch.obs) )
+  model.ests <- cbind.data.frame( asap.env$median.annual.ests[,c('SSB','January 1 B')], t(asap.env$asap$catch.obs) )
 }
 colnames(model.ests) <- c('ssb','biomass','catch')
-
+ssb.ests <- asap.env$ssb.ests
+biomass.ests <- asap.env$biomass.ests
 
 
 ### Create template list for projections
@@ -91,7 +106,7 @@ for (proj.run in proj.run.list)
   # proj.run <- proj.run.list[1]
   print(proj.run)
   proj.env <- new.env()
-  proj.dir <- file.path(base.proj.dir, proj.run)
+  proj.dir <- file.path(base.proj.dir, proj.run, f.name)
   load( file.path(proj.dir, 'Projection.summary.RDATA'), envir=proj.env )
   
   ssb.proj[[proj.run]] <- proj.env$ssb.table[,proj.yrs]
@@ -171,14 +186,14 @@ plot.short.term.projections('ssb',  'Spawning stock biomass (mt)', plot.fyr, 'to
   # SSBmsy
   abline(h = (ssb.brp), lty=2)
   text(x=fyr-3, y=(ssb.brp-50000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
-if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections.fyr',plot.fyr,'wmf',sep='.'))) }
+if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections',f.name,'fyr',plot.fyr,'wmf',sep='.'))) }
 
 plot.fyr <- 2005
 plot.short.term.projections('ssb',  'Spawning stock biomass (mt)', plot.fyr, 'topleft')
   # SSBmsy
   abline(h = (ssb.brp), lty=2)
   text(x=2005, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
-if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections.fyr',plot.fyr,'wmf',sep='.'))) }
+if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections',f.name,'fyr',plot.fyr,'wmf',sep='.'))) }
 
 
 ### Biomass
@@ -187,14 +202,14 @@ plot.short.term.projections('biomass',  'January 1 biomass (mt)', plot.fyr, 'top
   # Bmsy
   abline(h = (biomass.brp), lty=2)
   text(x=(fyr-2), y=(biomass.brp-90000), labels=bquote('B'['MSY PROXY'] ~ '=' ~ .(format(round((biomass.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
-if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('biomass.projections.fyr',plot.fyr,'wmf',sep='.'))) }
+if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('biomass.projections',f.name,'fyr',plot.fyr,'wmf',sep='.'))) }
 
 plot.fyr <- 2005
 plot.short.term.projections('biomass',  'January 1 biomass (mt)', plot.fyr, 'topleft')
   # Bmsy
   abline(h = (biomass.brp), lty=2)
   text(x=(2007), y=(biomass.brp+15000), labels=bquote('B'['MSY PROXY'] ~ '=' ~ .(format(round((biomass.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
-if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('biomass.projections.fyr',plot.fyr,'wmf',sep='.'))) }
+if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('biomass.projections',f.name,'fyr',plot.fyr,'wmf',sep='.'))) }
 
   
 ### Catch
@@ -203,19 +218,19 @@ plot.short.term.projections('catch',  'Catch (mt)', plot.fyr, 'topright')
   # MSY
   abline(h = (catch.brp), lty=2)
   text(x=(fyr-2), y=(catch.brp-30000), labels=bquote('MSY'['PROXY'] ~ '=' ~ .(format(round((catch.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
-if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('catch.projections.fyr',plot.fyr,'wmf',sep='.'))) }
+if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('catch.projections',f.name,'fyr',plot.fyr,'wmf',sep='.'))) }
 
 plot.fyr <- 2005
 plot.short.term.projections('catch',  'Catch (mt)', plot.fyr, 'topright')
   # MSY
   abline(h = (catch.brp), lty=2)
   text(x=(2004.5), y=(catch.brp-5000), labels=bquote('MSY'['PROXY'] ~ '=' ~ .(format(round((catch.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
-if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('catch.projections.fyr',plot.fyr,'wmf',sep='.'))) }
+if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('catch.projections',f.name,'fyr',plot.fyr,'wmf',sep='.'))) }
 
   
 ### Save workspace
 setwd(base.proj.dir)
-save.image('Summary.All.Projections.RDATA')
+save.image(paste(rdata.name, 'Proj.Summary.RDATA', sep='.'))
 
 
 
@@ -228,5 +243,20 @@ save.image('Summary.All.Projections.RDATA')
 rm(list=ls())
 ls()
 
+run.no <- '4'
+proj.nyr.name <- '2year' 
+rdata.name <- 'Rect.scenarios.with.Fmsy.proxy'
+
+current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
+run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
+base.proj.dir <- file.path(run.dir, proj.master.folder)
+
+setwd(base.proj.dir)
+load(paste(rdata.name, 'Proj.Summary.RDATA', sep='.'))
+
+
+t(do.call(rbind, lapply(ssb.proj,function(x){x['Median',]})))
+do.call(rbind, lapply(catch.proj,function(x){x['Median',]}))
 
 

@@ -12,21 +12,37 @@ run.no <- '4'
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
 
 # Projection details
-proj.master.folder <- 'projections.2year'
-proj.run <- 'Rect.2009.Onward'
-proj.fname <- 'PROJECTIONS.2YEAR.100.SIMS.FMSY.PROXY.RECT.2009'
-proj.fyr <- 2020
-proj.lyr <- 2023
+rect.name <- 'Rect.2009'
+f.name <- 'F.zero' # 'Fmsy.proxy' 'F.zero'
+proj.nyr.name <- '2year' 
+nsim <- 100
+
 
 
 ######## ######## ########
 
 
+
+### set directories and the agepro file name (proj.fname) based on above inputs
+
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+
+proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
-proj.dir <- file.path(proj.master.dir,proj.run)
+
+proj.dir <- file.path(proj.master.dir, paste(rect.name, 'Onward', sep='.'), f.name)
 setwd(proj.dir)
 
+proj.fname <- paste('PROJECTIONS', toupper(proj.nyr.name), nsim, 'SIMS', toupper(rect.name), toupper(f.name), sep='.')
+
+
+
+### Read in rdat file
+
+rdat <- dget(paste(proj.fname, 'RDAT', sep='.'))
+
+proj.fyr <- rdat$genparms$startyear
+proj.lyr <- rdat$genparms$endyear
 proj.yrs <- as.character(proj.fyr:proj.lyr)
 
 
@@ -113,18 +129,20 @@ ls()
 
 # Run details
 run.no <- '4'
-#current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
-current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+# current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
 
 # Projection details
-proj.master.folder <- 'projections.2year'
-proj.run <- 'Rect.1975.Onward'
+rect.name <- 'Rect.1975'
+f.name <- 'Fmsy.proxy'
+proj.nyr.name <- '2year' 
+nsim <- 100
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
-proj.dir <- file.path(proj.master.dir,proj.run)
+proj.dir <- file.path(proj.master.dir, paste(rect.name, 'Onward', sep='.'), f.name)
 
 load(file.path(proj.dir, 'Projection.summary.RDATA'))
-
 
 
