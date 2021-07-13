@@ -12,10 +12,14 @@ run.no <- '4'
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
 
 # Projection details
-rect.name <- 'Rect.2009'
-f.name <- 'F.zero' # 'Fmsy.proxy' 'F.zero'
-proj.nyr.name <- '2year' 
-nsim <- 100
+rect.name <- 'Rect.1975'
+f.name <- 'F.zero' # '7500mt' # 'Fmsy.proxy' 'F.zero'
+proj.nyr.name <- 'for.specs/F.zero.2022-2032' # 'for.specs/Constant.catch.2022-2032' 
+
+#nsim <- 100
+#proj.fname <- paste('PROJECTIONS', toupper(proj.nyr.name), nsim, 'SIMS', toupper(rect.name), toupper(f.name), sep='.')
+#proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), 'CATCH', toupper(f.name), sep='.')
+proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
 
 
 
@@ -30,10 +34,8 @@ run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
 
-proj.dir <- file.path(proj.master.dir, paste(rect.name, 'Onward', sep='.'), f.name)
+proj.dir <- file.path(proj.master.dir, paste(rect.name, 'Onward', sep='.') ) #, f.name)
 setwd(proj.dir)
-
-proj.fname <- paste('PROJECTIONS', toupper(proj.nyr.name), nsim, 'SIMS', toupper(rect.name), toupper(f.name), sep='.')
 
 
 
@@ -114,10 +116,12 @@ combined.table <- rbind.data.frame(ssb.table, rect.table, biomass.table, catch.t
 ### Save image and export CSV file
 
 rm(ssb, catch, fmult, biomass, rect)
-save.image(file.path(proj.dir, 'Projection.summary.RDATA'))
 
+save.image(file.path(proj.dir, 'Projection.summary.RDATA'))
 write.csv(combined.table,file.path(proj.dir, 'Short.term.projection.summary.csv'), na='')
 
+save.image(file.path(proj.dir, paste(f.name, rect.name, 'Projection.summary.RDATA', sep='.')))
+write.csv(combined.table, file.path(proj.dir, paste(f.name, rect.name, 'Short.term.projection.summary.csv', sep='.')), na='')
 
 
 ####################################################################
@@ -134,15 +138,19 @@ current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.M
 
 # Projection details
 rect.name <- 'Rect.1975'
-f.name <- 'Fmsy.proxy'
-proj.nyr.name <- '2year' 
-nsim <- 100
+f.name <- 'Fmsy.2021.onward' # '7500mt' # 'Fmsy.proxy'
+proj.nyr.name <- 'for.specs/Fmsy.2021.onward' #'2year' 
+# nsim <- 100
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
-proj.dir <- file.path(proj.master.dir, paste(rect.name, 'Onward', sep='.'), f.name)
+proj.dir <- file.path(proj.master.dir, paste(rect.name, 'Onward', sep='.') )# , f.name)
 
 load(file.path(proj.dir, 'Projection.summary.RDATA'))
+
+save.image(file.path(proj.dir, paste(f.name, rect.name, 'Projection.summary.RDATA', sep='.')))
+write.csv(combined.table, file.path(proj.dir, paste(f.name, rect.name, 'Short.term.projection.summary.csv', sep='.')), na='')
+
 
 
