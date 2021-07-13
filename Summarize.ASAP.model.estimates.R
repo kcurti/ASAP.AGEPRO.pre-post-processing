@@ -48,7 +48,7 @@ asap.summary <- read.csv(file.path(run.dir, "plots", paste('ASAP_summary_', asap
 annual.ests <-             cbind(asap.summary[,'SSB',drop=FALSE], as.matrix(asap$tot.jan1.B), asap.summary[,'Recr',drop=FALSE], asap.summary[,'Freport',drop=FALSE])
   colnames(annual.ests) <- c(                  'SSB',                          'January 1 B',               'Rect',                           'F')
   rownames(annual.ests) <- as.character(yrs)
-annual.ests[,c('SSB', 'January 1 B', 'Rect')] <- round(annual.ests[,c('SSB', 'January 1 B', 'Rect')], 0)
+annual.ests[,c('SSB', 'January 1 B', 'Rect')] <- round(annual.ests[,c('SSB', 'January 1 B', 'Rect')], 2)
 annual.ests[,'F'] <- round(annual.ests[,'F'], 3)   
   
 
