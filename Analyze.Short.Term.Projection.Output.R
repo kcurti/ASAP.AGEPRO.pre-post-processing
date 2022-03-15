@@ -13,8 +13,8 @@ current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.M
 
 # Projection details
 rect.name <- 'Rect.2009'
-f.name <- 'F10' # '7500mt' # 'Fmsy.proxy' 'F.zero'
-proj.nyr.name <- 'for.specs/F.rebuilding' # 'for.specs/Constant.catch.2022-2032' 
+f.name <- 'CALC.2022.OFL' # '7500mt' # 'Fmsy.proxy' 'F.zero'
+proj.nyr.name <- 'Emergency.Action.2022.OFL.Calc' # 'for.specs/Constant.catch.2022-2032' 
 
 #nsim <- 100
 #proj.fname <- paste('PROJECTIONS', toupper(proj.nyr.name), nsim, 'SIMS', toupper(rect.name), toupper(f.name), sep='.')
@@ -31,10 +31,10 @@ proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.nam
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 
-proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
+proj.master.folder <- proj.nyr.name# paste('projections',proj.nyr.name, sep='.')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
 
-proj.dir <- file.path(proj.master.dir, paste(rect.name, 'Onward', sep='.'), f.name)
+proj.dir <- file.path(proj.master.dir, paste(rect.name, 'Onward', sep='.') ) #, f.name)
 setwd(proj.dir)
 
 
