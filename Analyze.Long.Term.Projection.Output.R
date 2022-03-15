@@ -66,6 +66,13 @@ biomass.median <- apply(biomass,2,median)
 biomass.CI <- apply(biomass,2,function(x){quantile(x,c(0.025, 0.05, 0.95, 0.975)) })
 
 # Recruitment (xx2)
+rect <- read.table(paste(proj.fname,'xx2',sep='.'))
+colnames(rect) <- proj.yrs
+rect.median <- apply(rect,2,median)
+rect.CI <- apply(rect,2,function(x){quantile(x, c(0.025, 0.05, 0.95, 0.975)) })
+
+
+
   # rect <- read.table(paste(proj.fname,'xx2',sep='.'))
 
 
@@ -90,6 +97,10 @@ fmult.brp.CI <- rowMeans(fmult.CI[,avg.yrs])
 # Stock biomass
 biomass.brp <- mean(biomass.median[avg.yrs])
 biomass.brp.CI <- rowMeans(biomass.CI[,avg.yrs])
+
+# Rect 
+rect.at.brp <- mean(rect.median[avg.yrs])
+
 
 # Summary table
 summary.table <- data.frame(matrix(NA,nrow=4, ncol=3))
