@@ -98,20 +98,6 @@ ssb.cdf <- ssb %>%
   ylab("Cumulative probability")
 ssb.cdf
 
-rect.hist <- rect %>%
-  ggplot(aes(x=!!sym(plot.col))) + 
-  geom_histogram(color="black", fill="white", bins=100) + 
-  xlab(paste("Rect in", plot.col)) + 
-  ylab("Count")
-rect.hist
-
-rect.cdf <- rect %>%
-  ggplot(aes(x=!!sym(plot.col))) + 
-  stat_ecdf(geom="step", pad=FALSE) + 
-  xlab(paste("Rect in", plot.col)) + 
-  ylab("Cumulative probability")
-rect.cdf
-
 
 
 ### Save image and export CSV file
@@ -121,7 +107,6 @@ save.image(file.path(proj.dir, paste(f.name, rect.name, 'Projection.histogram.su
 
 
 ####################################################################
-
 
 
 
