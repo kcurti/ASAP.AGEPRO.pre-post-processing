@@ -79,22 +79,46 @@ rect.CI <- apply(rect,2,function(x){quantile(x, quant.values) })
 
 ### Create histogram plot for each variable
 
-plot.col <- '2032'
+plot.yr <- '2032'
 ssb.brp <- 181090
 
+windows()
 ssb.hist <- ssb %>%
-  ggplot(aes(x=!!sym(plot.col))) + 
+  ggplot(aes(x=!!sym(plot.yr))) + 
   geom_histogram(color="black", fill="white", bins=100) + 
   geom_vline(xintercept=ssb.brp, color="blue", size=0.9, linetype="dashed") + 
-  xlab(paste("SSB in", plot.col)) + 
-  ylab("Count")
+  geom_vline(xintercept=ssb.median[plot.yr], color="red", size=0.9, linetype="dashed") + 
+  xlab(paste("SSB in", plot.yr)) + 
+  ylab("Frequency")
 ssb.hist 
 
+windows()
+ssb.hist.2 <- ssb %>%
+  ggplot(aes(x=!!sym(plot.yr))) + 
+  geom_histogram(color="black", fill="white", bins=100) + 
+  annotate(geom = "vline", 
+           x = c(ssb.brp, ssb.median[plot.yr]),
+           xintercept = c(ssb.brp, ssb.median[plot.yr]), 
+           linetype = c("dashed", "dashed"),
+           color = c("blue","red"),
+           size = rep(0.9, 2)
+           ) + 
+  annotate(geom = "text",
+           x = rep(210000, 2),
+           y = c(10000,10500),
+           angle = 0,
+           hjust = 0,
+           label = c("SSB40%", paste("Median SSB in",plot.yr)),
+           color = c("blue", "red")) + 
+  xlab(paste("SSB in", plot.yr)) + 
+  ylab("Frequency")
+ssb.hist.2 
+
 ssb.cdf <- ssb %>%
-  ggplot(aes(x=!!sym(plot.col))) + 
+  ggplot(aes(x=!!sym(plot.yr))) + 
   stat_ecdf(geom="step", pad=FALSE) + 
   geom_vline(xintercept=ssb.brp, color="blue", size=0.9, linetype="dashed") + 
-  xlab(paste("SSB in", plot.col)) + 
+  xlab(paste("SSB in", plot.yr)) + 
   ylab("Cumulative probability")
 ssb.cdf
 
