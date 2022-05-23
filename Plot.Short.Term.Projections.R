@@ -16,7 +16,7 @@ current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.M
 # current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
 
 estimate.type <- 'point.est'   # 'median' or 'point.est'
-                               #  i.e the median MCMC estimates or the ASAP point estimates 
+#  i.e the median MCMC estimates or the ASAP point estimates 
 
 
 # Projection details
@@ -48,29 +48,29 @@ color.list <- c("magenta3", "limegreen", "steelblue1", "gold2", "blue", "purple"
 proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
 
 proj.name.list <- c(
-                   'Rect 2009, 50% prob rebuild',
-                   'Rect 2 Stanza, 50% prob rebuild',
-                   'Rect 2 Stanza, 60% prob rebuild',
-                   'Rect 2 stanza, P* at Fmsy',
-                   'Rect 2 stanza, P* at Frebuild (50% prob)'
+  'Rect 2009, 50% prob rebuild',
+  'Rect 2 Stanza, 50% prob rebuild',
+  'Rect 2 Stanza, 60% prob rebuild',
+  'Rect 2 stanza, P* at Fmsy',
+  'Rect 2 stanza, P* at Frebuild (50% prob)'
 )
 
 proj.path.list <- c(
-                   'F.rebuild/Rect.2009/F01',
-                   'F.rebuild/Rect.2Stanza.90545mt/F14',
-                   'F.rebuild/Rect.2Stanza.90545mt/F12',
-                   'PStar/Rect.2Stanza.90545mt/Fmsy/2020-2032.2ndIter',
-                   'PStar/Rect.2Stanza.90545mt/Frebuild/2020-2032.2ndIter'
+  'F.rebuild/Rect.2009/F01',
+  'F.rebuild/Rect.2Stanza.90545mt/F14',
+  'F.rebuild/Rect.2Stanza.90545mt/F12',
+  'PStar/Rect.2Stanza.90545mt/Fmsy/2020-2032.2ndIter',
+  'PStar/Rect.2Stanza.90545mt/Frebuild/2020-2032.2ndIter'
 )
 names(proj.path.list) <- proj.name.list
 
 
 proj.file.list <- c(
-                   'F01.Rect.2009',
-                   'F14.Rect.2Stanza.90545mt',
-                   'F12.Rect.2Stanza.90545mt',
-                   'FMSY.Rect.2Stanza.90545mt',
-                   'Frebuild.Rect.2Stanza.90545mt'
+  'F01.Rect.2009',
+  'F14.Rect.2Stanza.90545mt',
+  'F12.Rect.2Stanza.90545mt',
+  'FMSY.Rect.2Stanza.90545mt',
+  'Frebuild.Rect.2Stanza.90545mt'
 )
 names(proj.file.list) <- proj.name.list
 
@@ -128,8 +128,8 @@ f.ests <- asap.env$f.ests
 
 ### Create template list for projections
 proj.template <- vector('list',n.proj)
-  names(proj.template) <- proj.name.list
-  
+names(proj.template) <- proj.name.list
+
 # Base projection directory
 base.proj.dir <- file.path(run.dir, proj.master.folder)
 
@@ -160,7 +160,7 @@ for (proj.run in proj.name.list)
   rebuilt.env <- new.env()
   load( file.path(proj.dir, paste(proj.file.list[proj.run],'Probability.Rebuilt.RDATA',sep=".")), envir=rebuilt.env )
   prob.rebuilt[[proj.run]] <- rebuilt.env$ssb.prob.rebuilt
-
+  
   rm(rebuilt.env, proj.env, proj.dir)
 }
 
@@ -173,18 +173,18 @@ plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.
   
   # Get ASAP and MCMC estimates
   var.asap <- model.ests[,var.name,drop=FALSE]
-    colnames(var.asap) <- 'Estimate'
+  colnames(var.asap) <- 'Estimate'
   if(var.name %in% c('ssb','biomass', 'f'))  { 
     mcmc <- get(paste(var.name,'ests',sep='.'))[,c('X5th','X95th')] 
   }  else {
     mcmc <- cbind(var.asap,var.asap)
-      colnames(mcmc) <- c('X5th','X95th')
+    colnames(mcmc) <- c('X5th','X95th')
   }
   
   merged.asap <- merge(var.asap[as.character(plot.fyr:lyr),,drop=FALSE], mcmc[as.character(plot.fyr:lyr),], by="row.names",all=TRUE)
-    rownames(merged.asap) <- merged.asap$'Row.names'
-    colnames(merged.asap)[colnames(merged.asap)=='Row.names'] <- 'Year'
-    
+  rownames(merged.asap) <- merged.asap$'Row.names'
+  colnames(merged.asap)[colnames(merged.asap)=='Row.names'] <- 'Year'
+  
   # Get projection estimates
   proj.series <- get(paste(var.name,'proj',sep='.'))   
   
@@ -193,7 +193,7 @@ plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.
   proj.max <- max(do.call(rbind,proj.series))  
   y.lim <- c(0, max(c(asap.max, proj.max)) )
   x.lim <- c(plot.fyr,proj.lyr)
-    
+  
   # Plot
   windows(width=5.5,height=4.5)
   par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
@@ -202,24 +202,24 @@ plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.
   plot ( merged.asap$Year, merged.asap[,'Estimate'], lwd=2, col='black', xlim=x.lim, ylim=y.lim, axes=FALSE, type="l" )
   lines( merged.asap$Year, merged.asap[,'X5th'], lty=2, col='black', lwd=2 ) 
   lines( merged.asap$Year, merged.asap[,'X95th'], lty=2, col='black', lwd=2 ) 
-
+  
   # Projections
   for (i in 1:n.proj)
   {
     # i <- 1
     proj.run <- proj.name.list[i]
-
+    
     x.vec <- as.numeric(c(lyr,proj.yrs))
     y.vec <- cbind(merged.asap[as.character(lyr),'Estimate'], as.vector(proj.series[[proj.run]]['Median',]))
     lines(x.vec, y.vec, col=color.list[i], lty=1, lwd=2)
-
+    
     l.ci <- cbind(merged.asap[as.character(lyr),'X5th'], proj.series[[proj.run]]['5th Percentile',])
     lines(x.vec, l.ci, col=color.list[i], lty=2, lwd=1)
     
     u.ci <- cbind(merged.asap[as.character(lyr),'X95th'], proj.series[[proj.run]]['95th Percentile',])
     lines(x.vec, u.ci, col=color.list[i], lty=2, lwd=1)
   }
-    
+  
   axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
   axis(side=1, at=axTicks(1), labels=TRUE, cex.axis=0.8, padj = -0.5)
   box()
@@ -232,12 +232,12 @@ plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.
 ### SSB
 plot.fyr <- 2010
 plot.short.term.projections('ssb',  'Spawning stock biomass (mt)', plot.fyr, 'topleft')
-  # SSBmsy
+# SSBmsy
   abline(h = (ssb.brp), lty=2)
   text(x=plot.fyr, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
 if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
 
-  
+
 ### Biomass
 # plot.fyr <- 2005
 # plot.short.term.projections('biomass',  'January 1 biomass (mt)', plot.fyr, 'topleft')
@@ -246,11 +246,11 @@ if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections.fyr
 #   text(x=(2007), y=(biomass.brp+15000), labels=bquote('B'['MSY PROXY'] ~ '=' ~ .(format(round((biomass.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
 # if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('biomass.projections',f.name,'fyr',plot.fyr,'wmf',sep='.'))) }
 
-  
+
 ### Catch
 #plot.fyr <- 2017
 plot.short.term.projections('catch',  'Catch (mt)', plot.fyr, 'topright')
-  # MSY
+# MSY
   abline(h = (catch.brp), lty=2)
   text(x=(plot.fyr+0.5), y=(catch.brp-2000), labels=bquote('MSY'['PROXY'] ~ '=' ~ .(format(round((catch.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
 if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('catch.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
@@ -259,7 +259,7 @@ if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('catch.projections.f
 ### F
 #plot.fyr <- 2017
 plot.short.term.projections('f',  'F', plot.fyr, 'topright')
-  # FMSY
+# FMSY
   abline(h = (f.brp), lty=2)
   text(x=(plot.fyr), y=(f.brp-0.1), labels=bquote('FMSY'['PROXY'] ~ '=' ~ .(format(round((f.brp),2),big.mark=','))), cex= 0.8, pos=4)
 if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('f.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
@@ -279,23 +279,23 @@ plot.ref <- rect.at.brp/1000
   abline(h = (plot.ref), lty=2)
   text(x=(plot.fyr+6.3), y=(plot.ref+20000), labels=bquote('Long-term (100-yr) median recruitment' ~ '=' ~ .(format(round(plot.ref,0),big.mark=','))), cex= 0.8, pos=4)
 if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('rect.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
-  
+
 
 
 ### Create terminal year summary tables    
 rect.proj.lyr <- do.call(rbind, lapply(rect.proj, function(x) {x['Median',as.character(proj.lyr),drop=FALSE]}))
   colnames(rect.proj.lyr) <- 'Rect.2032'
-  
+
 ssb.proj.lyr <- do.call(rbind, lapply(ssb.proj, function(x) {x['Median',as.character(proj.lyr),drop=FALSE]}))
 prob.rebuilt.mat <- do.call(rbind, prob.rebuilt)
 ssb.combined <- cbind.data.frame(ssb.proj.lyr, prob.rebuilt.mat)
   colnames(ssb.combined) <- c('SSB.2032', 'Prob.rebuilt')
-  
+
 catch.proj.lyr <- do.call(rbind, lapply(catch.proj, function(x) {x['Median',as.character(proj.lyr),drop=FALSE]}))
   colnames(catch.proj.lyr) <- 'Catch.2032'
   
   
-    
+  
 ### Save workspace
 setwd(base.proj.dir)
 save.image(paste(rdata.name, 'Proj.Summary.RDATA', sep='.'))
