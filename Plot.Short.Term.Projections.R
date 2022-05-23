@@ -329,4 +329,13 @@ setwd(base.proj.dir)
 load(paste(rdata.name, 'Proj.Summary.RDATA', sep='.'))
 
 
-  
+########## Plot two alternatives under final consideration ###########
+
+
+proj.name.list <- c(
+  'Rect 2 Stanza, 60% prob rebuild',
+  'Rect 2 stanza, P* at Fmsy'
+)
+
+n.proj <- length(proj.name.list)
+
