@@ -11,18 +11,24 @@ library(tidyverse)
 # Run details
 run.no <- '4'
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
-
+save.fig <- 'y'
+fig.type <- 'tif'
 
 # Projection details
 
-# pstar.yr <- "2032.2nd.iter"
+pstar.yr <- "2032.2nditer"
 rect.name <- 'Rect.2Stanza.90545mt' #   'Rect.2009' # 
-f.name <- 'F12' # 'FMSY' # 
+f.name <- 'FMSY' # 'F12' # 
 CV <- 150
-proj.dir.name <- paste('rebuilding/Updated.Projections.March2022', 'F.rebuild', sep='/')
-proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
-# proj.dir.name <- paste('rebuilding/Additional.Projections.May2022/PStar.Constant.Catch.Combo', "CC.6316mt", paste(2020,pstar.yr,sep="-"), sep='/')
-# proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), paste("CV",CV,sep=""), toupper(f.name), sep='.')
+
+### Frebuild
+# proj.dir.name <- paste('rebuilding/Updated.Projections.March2022', 'F.rebuild', sep='/')
+# proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
+
+### PStar
+proj.dir.name <- paste('rebuilding/Updated.Projections.March2022/PStar', rect.name, f.name, paste(2020,pstar.yr,sep="-"), sep='/')
+#proj.dir.name <- paste('rebuilding/Additional.Projections.May2022/PStar.Constant.Catch.Combo', "CC.6316mt", paste(2020,pstar.yr,sep="-"), sep='/')
+proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), paste("CV",CV,sep=""), toupper(f.name), sep='.')
 
 
 
@@ -38,8 +44,8 @@ run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.master.folder <- paste('projections',proj.dir.name, sep='.')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
 
-proj.dir <- file.path(proj.master.dir, rect.name, f.name)
-# proj.dir <- proj.master.dir
+# proj.dir <- file.path(proj.master.dir, rect.name, f.name)
+proj.dir <- proj.master.dir
 
 setwd(proj.dir)
 
@@ -61,19 +67,16 @@ proj.yrs <- as.character(proj.fyr:proj.lyr)
 ssb <- read.table(paste(proj.fname,'xx3',sep='.'))
   colnames(ssb) <- proj.yrs
 ssb.median <- apply(ssb,2,median)
-ssb.CI <- apply(ssb,2,function(x){quantile(x, quant.values) })
 
 # Fmult (xx9)
 fmult <- read.table(paste(proj.fname,'xx9',sep='.'))
   colnames(fmult) <- proj.yrs
 fmult.median <- apply(fmult,2,median)
-fmult.CI <- apply(fmult,2,function(x){quantile(x, quant.values) })
 
 # Recruitment (xx2)
 rect <- read.table(paste(proj.fname,'xx2',sep='.'))
   colnames(rect) <- proj.yrs
 rect.median <- apply(rect,2,median)
-rect.CI <- apply(rect,2,function(x){quantile(x, quant.values) })
 
 
 
@@ -91,6 +94,7 @@ ssb.hist <- ssb %>%
   xlab(paste("SSB in", plot.yr)) + 
   ylab("Frequency")
 ssb.hist 
+if(save.fig=='y') { savePlot(file.path(proj.dir, paste(f.name, rect.name, 'ssb.histogram',plot.yr,fig.type,sep='.')), type=fig.type) }
 
 windows()
 ssb.hist.2 <- ssb %>%
@@ -113,6 +117,7 @@ ssb.hist.2 <- ssb %>%
   xlab(paste("SSB in", plot.yr)) + 
   ylab("Frequency")
 ssb.hist.2 
+if(save.fig=='y') { savePlot(file.path(proj.dir, paste(f.name, rect.name, 'ssb.histogram.2',plot.yr,fig.type,sep='.')), type=fig.type) }
 
 ssb.cdf <- ssb %>%
   ggplot(aes(x=!!sym(plot.yr))) + 
