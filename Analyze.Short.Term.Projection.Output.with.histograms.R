@@ -128,6 +128,17 @@ ssb.cdf <- ssb %>%
 ssb.cdf
 
 
+### Plot a couple individual simulation trajectories
+ssb %>%
+  # Select simulations
+  slice(1:3) %>%
+  # Create simulation id
+  mutate(ID = as.factor(row_number())) %>%
+  # Pivot for GGplot
+  pivot_longer(colnames(ssb), names_to = 'Year', values_to = 'SSB') %>%
+  group_by(ID) %>%
+  ggplot(aes(x=Year, y=SSB)) + geom_line(aes(color=ID, group=ID))
+
 
 ### Save image and export CSV file
 
