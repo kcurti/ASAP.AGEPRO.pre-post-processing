@@ -25,6 +25,8 @@ Summarize.ASAP.model.estimates.R
    --> Summary.Tables.RDATA
    Summarizes SSB, B, F, FAA, NAA, selectivity and terminal year estimates
 
+**Run MCMC and Retro Analyses**
+
 Summarize.Terminal.yr.ests.with.CIs.R 
    --> Summary.Tables.with.CIs.RDATA
    Takes the MCMC results and summarizes the 90% CIs
