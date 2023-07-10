@@ -8,10 +8,10 @@
 rm(list=ls())
 ls()
 
-run.no <- '4'
+run.no <- '9'
 avg.nyrs <- 5
 
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2023.Management.Track')
 
 
 #############
@@ -22,8 +22,8 @@ run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 asap.name <- paste('Run',run.no,sep='')
 
 rdat <- paste0(asap.name, ".rdat")
-setwd(run.dir)
-asap <- dget(rdat)
+# setwd(run.dir)
+asap <- dget(file.path(run.dir, rdat))
 
 yrs <- rownames(asap$N.age)
 avg.yrs <- tail(yrs, avg.nyrs)
@@ -56,7 +56,7 @@ fleet2.catch.waa.summary <- calc.cv.for.yr.age.mat(asap$WAA.mats$WAA.catch.fleet
 
 
 ### Determine CV for fishery selectivity estimates; Read in estimates from std file
-asap.std <- read.table(paste0(asap.name, ".std"), header = F, skip = 1, sep = "")
+asap.std <- read.table(file.path(run.dir, paste0(asap.name, ".std")), header = F, skip = 1, sep = "")
  names(asap.std) <- c("index", "name", "value", "stdev")
 fish.sel.params <- asap.std[substr(asap.std$name, 1, 10) == 'sel_params',]
  
@@ -98,8 +98,8 @@ write.csv(recruits.75onward,  file.path(proj.dir, 'Rect.for.projections.csv'))
 rm(list=ls())
 ls()
 
-run.no <- '4'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+run.no <- '7'
+current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2023.Management.Track')
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.dir <- file.path(run.dir,'projections.brps')

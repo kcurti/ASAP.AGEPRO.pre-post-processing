@@ -11,11 +11,12 @@ rm(list=ls())
 ls()
 
 
-run.no <- '4'
+run.no <- '9'
 save.fig <- TRUE
 fig.type <- 'wmf'
 
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+# current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
 
 
 #######################
