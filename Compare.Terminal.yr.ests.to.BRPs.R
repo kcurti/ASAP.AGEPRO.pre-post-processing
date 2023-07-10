@@ -8,9 +8,9 @@
 rm(list=ls())
 ls()
 
-run.no <- '4'
+run.no <- '9'
 proj.run <- 'Rect.1975.Onward'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
 
 estimate.type <- 'point.est'   # 'median' or 'point.est'
                                #  i.e the median MCMC estimates or the ASAP point estimates 
@@ -64,7 +64,7 @@ f.brp <- fmult.brp
 
 windows(width=5,height=4)
 par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
-plot((plot.data[,'SSB']/1000), plot.data[,'F'], type='o', cex=1.0, pch=16, col='black', axes=FALSE, xlab='', ylab='')
+plot((plot.data[,'SSB']/1000), plot.data[,'F'], type='o', cex=1.0, pch=16, col='black', axes=FALSE, xlab='', ylab='', ylim=c(0,max(plot.data[,'F'])))
 axis(side=1, at=axTicks(1), labels=TRUE, cex.axis=0.8, padj = -0.5)
 axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
 box()
@@ -105,7 +105,7 @@ lyr.f.lci <- terminal.yr.ests[fmort.name, '5th percentile']
 
 windows(width=5,height=4)
 par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
-plot((plot.data[,'SSB']/1000), plot.data[,'F'], type='o', cex=1.0, pch=16, col='black', axes=FALSE, xlab='', ylab='')
+plot((plot.data[,'SSB']/1000), plot.data[,'F'], type='o', cex=1.0, pch=16, col='black', axes=FALSE, xlab='', ylab='', ylim=c(0,max(plot.data[,'F'])))
   axis(side=1, at=axTicks(1), labels=TRUE, cex.axis=0.8, padj = -0.5)
   axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
   box()
@@ -164,9 +164,9 @@ save.image(file.path(output.dir, 'Comparison.with.BRPs.RDATA'))
 rm(list=ls())
 ls()
 
-run.no <- '4'
+run.no <- '7'
 
-current.assess.dir <- '//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
 run.wd <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.wd,'outputs')
 
