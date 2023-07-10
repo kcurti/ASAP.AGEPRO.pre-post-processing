@@ -9,14 +9,14 @@ ls()
 
 
 # Run details
-run.no <- '4'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+run.no <- '9'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
 
 # Projection details
 proj.run <- 'Rect.1975.Onward'
 proj.fname <- 'projections.100.YR.100.SIMS'
-proj.fyr <- 2020
-proj.lyr <- 2121
+proj.fyr <- 2023
+proj.lyr <- 2124
 nyr.avg <- 10
 
 
@@ -25,7 +25,7 @@ nyr.avg <- 10
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.dir <- file.path(run.dir,'projections.brps',proj.run)
-setwd(proj.dir)
+# setwd(proj.dir)
 
 proj.yrs <- as.character(proj.fyr:proj.lyr)
 
@@ -36,7 +36,7 @@ proj.yrs <- as.character(proj.fyr:proj.lyr)
 rdat <- dget(file.path(proj.dir, paste0(proj.fname, ".RDAT")))
 
 # SSB (xx3)
-ssb <- read.table(paste(proj.fname,'xx3',sep='.'))
+ssb <- read.table(file.path(proj.dir, paste(proj.fname,'xx3',sep='.')))
   colnames(ssb) <- proj.yrs
 ssb.median <- apply(ssb,2,median)
 ssb.CI <- apply(ssb,2,function(x){quantile(x,c(0.025, 0.05, 0.95, 0.975)) })
@@ -45,7 +45,7 @@ ssb.mean <- apply(ssb,2,mean)
 ssb.cv <- ssb.stdev / ssb.mean
 
 # MSY: Combined catch (xx6)
-msy <- read.table(paste(proj.fname,'xx6',sep='.'))
+msy <- read.table(file.path(proj.dir, paste(proj.fname,'xx6',sep='.')))
   colnames(msy) <- proj.yrs
 msy.median <- apply(msy,2,median)
 msy.CI <- apply(msy,2,function(x){quantile(x,c(0.025, 0.05, 0.95, 0.975)) })
@@ -54,19 +54,19 @@ msy.mean <- apply(msy,2,mean)
 msy.cv <- msy.stdev / msy.mean
 
 # Fmult (xx9)
-fmult <- read.table(paste(proj.fname,'xx9',sep='.'))
+fmult <- read.table(file.path(proj.dir, paste(proj.fname,'xx9',sep='.')))
   colnames(fmult) <- proj.yrs
 fmult.median <- apply(fmult,2,median)
 fmult.CI <- apply(fmult,2,function(x){quantile(x,c(0.025, 0.05, 0.95, 0.975)) })
 
 # Stock Biomass (xx4)
-biomass <- read.table(paste(proj.fname,'xx4',sep='.'))
+biomass <- read.table(file.path(proj.dir, paste(proj.fname,'xx4',sep='.')))
   colnames(biomass) <- proj.yrs
 biomass.median <- apply(biomass,2,median)
 biomass.CI <- apply(biomass,2,function(x){quantile(x,c(0.025, 0.05, 0.95, 0.975)) })
 
 # Recruitment (xx2)
-rect <- read.table(paste(proj.fname,'xx2',sep='.'))
+rect <- read.table(file.path(proj.dir, paste(proj.fname,'xx2',sep='.')))
 colnames(rect) <- proj.yrs
 rect.median <- apply(rect,2,median)
 rect.CI <- apply(rect,2,function(x){quantile(x, c(0.025, 0.05, 0.95, 0.975)) })
@@ -118,7 +118,7 @@ summary.table['MSY proxy',] <- c(round(msy.brp,0), round(msy.brp.CI,0)[c('5%','9
 rm(list=ls()[ls()%in%c('ssb','msy','fmult','biomass','rect')]) 
 save.image(file.path(proj.dir, 'Projection.summary.RDATA'))
 
-write.csv(summary.table,'Reference.point.summary.csv')
+write.csv(summary.table,file.path(proj.dir, 'Reference.point.summary.csv'))
 
 
 
