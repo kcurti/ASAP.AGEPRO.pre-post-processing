@@ -1,6 +1,6 @@
-# ASAP.packages <- c('devtools','dplyr','Hmisc','officer','plotMCMC','plotrix','readr','reshape2','tseries')
+# ASAP.packages <- c('dplyr','Hmisc','officer','plotMCMC','plotrix','readr','reshape2','tseries')
 # install.packages(ASAP.packages)
-# devtools::install_github("cmlegault/ASAPplots")
+# devtools::install_github("cmlegault/ASAPplots", build_vignettes = TRUE)
 
 
 ##################################################################
@@ -13,11 +13,13 @@ library(dplyr)
 rm(list=ls())
 ls()
 
-run.no <- '4'
+run.no <- '11'
 retro <- 'y'
 mcmc <- 'n'
 
-current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
+# current.assess.dir <- c('//nefscfile/Atlantic_Mackerel/Kiersten_Curti/Modeling/2021.Management.Track')
+# current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2023.Management.Track')
 base.wd <- file.path(current.assess.dir,paste('Run',run.no,sep=''))
 wd <- base.wd
 
