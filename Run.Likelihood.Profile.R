@@ -23,9 +23,10 @@ param.vec <- seq(0.05,0.75,0.01)
     
 
 ### Paths to directories with original ASAP dat files and original ASAP dat file names
-orig.fname <- 'Run4'
+orig.fname <- 'Run9'
 
-assess.dir <- 'C:/users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling'
+git.dir <- 'C:/Users/Kiersten.Curti/Documents/GitHub.Repositories/ASAP.AGEPRO.pre-post-processing'
+assess.dir <- 'C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track'
 orig.dir <- file.path(assess.dir,orig.fname)
 
 
@@ -47,8 +48,8 @@ save.plots <- TRUE
 
 
 # Source R programs with the read and write functions
-source(paste(assess.dir,'Read.ASAP3.dat.file.R', sep='/'))
-source(paste(assess.dir,'Write.ASAP3.dat.file.R',  sep='/'))
+source(paste(git.dir,'Read.ASAP3.dat.file.R', sep='/'))
+source(paste(git.dir,'Write.ASAP3.dat.file.R',  sep='/'))
 
   
 ############## Read in results from orig run ############## 
@@ -89,7 +90,7 @@ convergence <- rep(NA,length(param.vec))
 ### Loop over parameter values to create new dat file, run ASAP and read in resulting rdat file
 for (param.run in 1:length(param.vec))
 {
-  # param.run <- 11
+  # param.run <- 1
   param.value <- param.vec[param.run]
   param.name <- names(param.vec)[param.run]
   
@@ -103,8 +104,8 @@ for (param.run in 1:length(param.vec))
   adj.dat <- orig.dat  
   
   # Modified parameter matrix
-  if(class(orig.dat.param)=='matrix')                   {adj.dat.param <- matrix(param.value,nrow=nrow(orig.dat.param), ncol=ncol(orig.dat.param)) }
-  if(class(orig.dat.param)%in%c('integer','numeric'))   {adj.dat.param <- rep(param.value, length(orig.dat.param))}
+  if(class(orig.dat.param)[1]=='matrix')                   {adj.dat.param <- matrix(param.value,nrow=nrow(orig.dat.param), ncol=ncol(orig.dat.param)) }
+  if(class(orig.dat.param)[1]%in%c('integer','numeric'))   {adj.dat.param <- rep(param.value, length(orig.dat.param))}
   adj.dat[[dat.param.name]] <- adj.dat.param
   
   # Write new ASAP dat file
@@ -216,6 +217,21 @@ lines(min.param, diff.like[min.param.name], type='p',col='red', pch=16, cex=1.3)
 lines(orig.param, diff.like[orig.param.name], type='p',col='midnightblue', pch=16, cex=1.3)
 
 if (save.plots==T)  savePlot( file.path(profile.dir, paste('Likelihood.difference.profile',fig.type,sep='.')), type=fig.type)
+
+
+windows(width=5,height=4)
+par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
+plot( param.vec[names(diff.like)], diff.like, ylim=c(0,20), axes=FALSE) 
+axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
+axis(side=1, at=param.vec, labels=TRUE, cex.axis=0.8, padj = -0.5)
+box()
+mtext(side=1,param.label.name, line=0, outer=TRUE, cex=0.9)
+mtext(side=2,'Likelihood difference', line=0, outer=TRUE, cex=0.9)
+# Add colors for the base run and minimum
+lines(min.param, diff.like[min.param.name], type='p',col='red', pch=16, cex=1.3)
+lines(orig.param, diff.like[orig.param.name], type='p',col='midnightblue', pch=16, cex=1.3)
+
+if (save.plots==T)  savePlot( file.path(profile.dir, paste('Subset.Likelihood.difference.profile',fig.type,sep='.')), type=fig.type)
 
 
 
