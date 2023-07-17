@@ -10,6 +10,7 @@ ls()
 
 run.no <- '9'
 proj.run <- 'Rect.1975.Onward'
+# current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
 
 estimate.type <- 'point.est'   # 'median' or 'point.est'
