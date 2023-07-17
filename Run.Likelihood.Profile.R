@@ -221,7 +221,7 @@ if (save.plots==T)  savePlot( file.path(profile.dir, paste('Likelihood.differenc
 
 windows(width=5,height=4)
 par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
-plot( param.vec[names(diff.like)], diff.like, ylim=c(0,20), axes=FALSE) 
+plot( param.vec[names(diff.like)], diff.like, xlim=c(0.05,0.5), ylim=c(0,20), axes=FALSE) 
 axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
 axis(side=1, at=param.vec, labels=TRUE, cex.axis=0.8, padj = -0.5)
 box()
@@ -247,8 +247,8 @@ save.image(file.path(profile.dir,'Final.Summary.RDATA'))
 rm(list=ls())
 ls()
 
-orig.fname <- 'Run4'
-assess.dir <- 'C:/users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling'
+orig.fname <- 'Run9'
+assess.dir <- 'C:/users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track'
 profile.name <- 'Mprofile'
 
 orig.dir <- file.path(assess.dir,orig.fname)
