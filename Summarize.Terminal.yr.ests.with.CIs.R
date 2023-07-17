@@ -16,6 +16,7 @@ run.no <- '9'
 mcmc.folder.name <- 'mcmc.2000.it.1000.thin'
 
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+# current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2021.MT.Modeling')
 
 estimate.type <- 'point.est'   # 'median' or 'point.est'
 
@@ -107,14 +108,14 @@ write.csv(median.annual.ests, file.path(output.dir, paste('Run',run.no,'.Annual.
 
 
 
-# rm(list=ls())
-# ls()
-# 
-# run.no <- '4'
-# 
-# current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
-# run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
-# output.dir <- file.path(run.dir,'outputs')
-# load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
+rm(list=ls())
+ls()
+
+run.no <- '9'
+
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+output.dir <- file.path(run.dir,'outputs')
+load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
 
 
