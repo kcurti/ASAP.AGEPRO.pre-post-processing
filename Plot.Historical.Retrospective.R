@@ -98,20 +98,20 @@ for(assess.name in names(hist.ests))
 
 
 ### Color list
-color.list <- c("magenta3", "limegreen", "midnightblue", "gold2", "steelblue1", "magenta3", "limegreen", "midnightblue", "gold2", "steelblue1")
+color.list <- c("magenta3", "limegreen", "steelblue1", "midnightblue", "gold2", "steelblue1", "magenta3", "limegreen", "midnightblue", "gold2", "steelblue1")
 
 
  
 ### Functions to plot F, SSB and Recruitment
 
-plot.F <- function(include.saw42, write.xlab, plot.fyr)
+plot.F <- function(prev.assess.4.plot, write.xlab, plot.fyr)
 {
-  # include.saw42 <- FALSE; write.xlab <- TRUE; plot.fyr <- 1969
+  # prev.assess.4.plot <- c("Bench.2017","MT.2021"); write.xlab <- TRUE; plot.fyr <- 1969
  
   plot.yrs <- as.character(plot.fyr:tail(current.yrs,1))
   current.ests.var <- current.ests[['F']][plot.yrs,]
   all.prev.ests.var <- lapply(c(prev.ests, hist.ests), function(x) {data.frame(x[plot.yrs,'F',drop=FALSE])})
-    if(!include.saw42) {all.prev.ests.var <- all.prev.ests.var[!names(all.prev.ests.var)=='SAW42']}
+  all.prev.ests.var <- all.prev.ests.var[prev.assess.4.plot]
 
   ymax <- max(c(current.ests.var$X95th, unlist(all.prev.ests.var)), na.rm=TRUE)
 
@@ -131,14 +131,14 @@ plot.F <- function(include.saw42, write.xlab, plot.fyr)
 } 
 
 
-plot.SSB <- function(include.saw42, write.xlab, plot.fyr)
+plot.SSB <- function(prev.assess.4.plot, write.xlab, plot.fyr)
 {
-  # include.saw42 <- FALSE; write.xlab <- TRUE; plot.fyr <- 1969
+  # prev.assess.4.plot <- c("Bench.2017","MT.2021"); write.xlab <- TRUE; plot.fyr <- 1969
   
   plot.yrs <- as.character(plot.fyr:tail(current.yrs,1))
   current.ests.var <- current.ests[['SSB']][plot.yrs,]/1000
   all.prev.ests.var <- lapply(c(prev.ests, hist.ests), function(x) {data.frame(x[plot.yrs,'SSB',drop=FALSE])/1000})
-  if(!include.saw42) {all.prev.ests.var <- all.prev.ests.var[!names(all.prev.ests.var)=='SAW42']}
+  all.prev.ests.var <- all.prev.ests.var[prev.assess.4.plot]
   
   ymax <- max(c(current.ests.var$X95th, unlist(all.prev.ests.var)), na.rm=TRUE)
   
@@ -158,17 +158,17 @@ plot.SSB <- function(include.saw42, write.xlab, plot.fyr)
 } 
 
 
-plot.Rect <- function(include.saw42, write.xlab, plot.fyr)
+plot.Rect <- function(prev.assess.4.plot, write.xlab, plot.fyr)
 {
-  # include.saw42 <- FALSE; write.xlab <- TRUE; plot.fyr <- 1969
+  # prev.assess.4.plot <- c("Bench.2017","MT.2021"); write.xlab <- TRUE; plot.fyr <- 1969
   
   plot.yrs <- as.character(plot.fyr:tail(current.yrs,1))
   current.ests.var <- current.ests[['Rect']][plot.yrs,,drop=FALSE] / 1000
   prev.ests.var <- lapply(c(prev.ests), function(x) {data.frame(x[plot.yrs,'Rect',drop=FALSE]/1000)})
   hist.ests.var <- lapply(c(hist.ests), function(x) {data.frame(x[plot.yrs,'Rect',drop=FALSE])})
-    if(!include.saw42) {hist.ests.var <- hist.ests.var[!names(hist.ests.var)=='SAW42']}
   all.prev.ests.var <- c(prev.ests.var, hist.ests.var)
-
+  all.prev.ests.var <- all.prev.ests.var[prev.assess.4.plot]
+  
   ymax <- max(c(current.ests.var$X95th, unlist(all.prev.ests.var)), na.rm=TRUE)
 
   plot(plot.yrs, current.ests.var$Rect, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=2)
@@ -189,18 +189,19 @@ plot.Rect <- function(include.saw42, write.xlab, plot.fyr)
 
 
 ### Create Historical Retrospective plot
-include.saw42 <- FALSE
-assess.name.labels <- c(current.assess, prev.assess, hist.assess)
-assess.name.labels <- if(!include.saw42) {assess.name.labels[(!names(assess.name.labels)%in%'SAW42')]}
+prev.assess.4.plot <- c("MT.2021","Bench.2017","TRAC"); 
+assess.name.labels.all <- c(current.assess, prev.assess, hist.assess)
+assess.name.labels <- assess.name.labels.all[c(names(current.assess), prev.assess.4.plot)]
+  
 
 plot.fyr <- '1968'
 windows(height=8.0, width=5.0)
 par(mfcol=c(3,1))
 par(mar=c(0.5, 2.7, 1.3, 1) +0.1);  par(oma=c(4.5,2.2,0.5,0)) # Horizontal y-axis
-plot.SSB(include.saw42, write.xlab <- FALSE, plot.fyr)
+plot.SSB(prev.assess.4.plot, write.xlab <- FALSE, plot.fyr)
 legend('topright', assess.name.labels, bty="n", col=c('black',color.list[1:(length(assess.name.labels)-1)]),cex=1.0,lwd=2) 
-plot.F(include.saw42, write.xlab <- FALSE, plot.fyr)
-plot.Rect(include.saw42, write.xlab <- TRUE, plot.fyr)
+plot.F(prev.assess.4.plot, write.xlab <- FALSE, plot.fyr)
+plot.Rect(prev.assess.4.plot, write.xlab <- TRUE, plot.fyr)
 mtext('Year', side=1, line=3, cex=0.8) 
 # Cannot save as wmf due to use of polygon
 if(save.fig=='y') {savePlot(file.path(output.dir,paste('Historical.retrospective.fyr',plot.fyr,'png',sep='.')),type='png')}
@@ -210,23 +211,25 @@ plot.fyr <- '2000'
 windows(height=8.0, width=5.0)
 par(mfcol=c(3,1))
 par(mar=c(0.5, 2.7, 1.3, 1) +0.1);  par(oma=c(4.5,2.2,0.5,0)) # Horizontal y-axis
-plot.SSB(include.saw42, write.xlab <- FALSE, plot.fyr)
+plot.SSB(prev.assess.4.plot, write.xlab <- FALSE, plot.fyr)
 legend('topright', assess.name.labels, bty="n", col=c('black',color.list[1:(length(assess.name.labels)-1)]),cex=1.0,lwd=2) 
-plot.F(include.saw42, write.xlab <- FALSE, plot.fyr)
-plot.Rect(include.saw42, write.xlab <- TRUE, plot.fyr)
+plot.F(prev.assess.4.plot, write.xlab <- FALSE, plot.fyr)
+plot.Rect(prev.assess.4.plot, write.xlab <- TRUE, plot.fyr)
 mtext('Year', side=1, line=3, cex=0.8) 
 # Cannot save as wmf due to use of polygon
 if(save.fig=='y') {savePlot(file.path(output.dir,paste('Historical.retrospective.fyr',plot.fyr,'png',sep='.')),type='png')}
 
 
 plot.fyr <- '2010'
+prev.assess.4.plot <- c("MT.2021","Bench.2017"); 
+assess.name.labels <- assess.name.labels.all[c(names(current.assess), prev.assess.4.plot)]
 windows(height=8.0, width=5.0)
 par(mfcol=c(3,1))
 par(mar=c(0.5, 2.7, 1.3, 1) +0.1);  par(oma=c(4.5,2.2,0.5,0)) # Horizontal y-axis
-plot.SSB(include.saw42, write.xlab <- FALSE, plot.fyr)
-legend('topright', assess.name.labels, bty="n", col=c('black',color.list[1:(length(assess.name.labels)-1)]),cex=1.0,lwd=2) 
-plot.F(include.saw42, write.xlab <- FALSE, plot.fyr)
-plot.Rect(include.saw42, write.xlab <- TRUE, plot.fyr)
+plot.SSB(prev.assess.4.plot, write.xlab <- FALSE, plot.fyr)
+legend('bottomleft', assess.name.labels, bty="n", col=c('black',color.list[1:(length(assess.name.labels)-1)]),cex=1.0,lwd=2) 
+plot.F(prev.assess.4.plot, write.xlab <- FALSE, plot.fyr)
+plot.Rect(prev.assess.4.plot, write.xlab <- TRUE, plot.fyr)
 mtext('Year', side=1, line=3, cex=0.8) 
 # Cannot save as wmf due to use of polygon
 if(save.fig=='y') {savePlot(file.path(output.dir,paste('Historical.retrospective.fyr',plot.fyr,'png',sep='.')),type='png')}
@@ -246,16 +249,17 @@ ls()
 
 
 # ASAP details
-run.no <- '4'
+run.no <- '9'
 
 
-net.dir <- '//net.nefsc.noaa.gov/home0/kcurti'
+source("~/R/Directory_Paths.R")
 # Network modeling directory (containing previous assessments)
-modeling.dir <- file.path(net.dir, 'Mackerel/Modeling')
-current.assess.dir <- file.path(modeling.dir, '2021.Management.Track')
+modeling.dir <- file.path(mack.net.dir, 'Kiersten_Curti/Modeling')
+# Current assessment name
+current.assess.dir <- '2023.Management.Track'
 
 # Current assessment name
-run.wd <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+run.wd <- file.path(modeling.dir, current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.wd,'outputs')
 
 
