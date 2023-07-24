@@ -219,9 +219,10 @@ lines(orig.param, diff.like[orig.param.name], type='p',col='midnightblue', pch=1
 if (save.plots==T)  savePlot( file.path(profile.dir, paste('Likelihood.difference.profile',fig.type,sep='.')), type=fig.type)
 
 
+param.vec.sub <- param.vec[param.vec<=0.5]
 windows(width=5,height=4)
 par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
-plot( param.vec[names(diff.like)], diff.like, xlim=c(0.05,0.5), ylim=c(0,20), axes=FALSE) 
+plot( param.vec.sub, diff.like[names(param.vec.sub)], xlim=c(0.05,0.5), ylim=c(0,20), axes=FALSE) 
 axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
 axis(side=1, at=param.vec, labels=TRUE, cex.axis=0.8, padj = -0.5)
 box()
