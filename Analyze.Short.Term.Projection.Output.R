@@ -16,9 +16,9 @@ current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Mana
 
 #yc.name <- 'M04'
 rect.name <- 'Rect.2Stanza' #   'Rect.2009' # 
-f.name <- 'F12' # 'FMSY' # 
+f.name <- 'F07' # 'FMSY' # 
 
-proj.dir.name <- 'rebuilding'
+proj.dir.name <- 'rebuilding/Age2.35Percent'
 proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
 
 
@@ -47,6 +47,7 @@ proj.master.dir <- file.path(run.dir, proj.master.folder)
 
 # proj.dir <- file.path(proj.master.dir, yc.name, f.name)
 proj.dir <- file.path(proj.master.dir, f.name)
+# proj.dir <- file.path(proj.master.dir, 'F11.Ages1-2.35Percent')
 
 
 

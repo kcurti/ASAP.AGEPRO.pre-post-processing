@@ -17,18 +17,18 @@ fig.type <- 'tif'
 # Projection details
 
 pstar.yr <- "2032.2nditer"
-rect.name <- 'Rect.2Stanza.90545mt' #   'Rect.2009' # 
-f.name <- 'FMSY' # 'F12' # 
+rect.name <- 'Rect.2009' #   'Rect.2009' # 
+f.name <- 'F22' # 'F12' # 
 CV <- 150
 
 ### Frebuild
-# proj.dir.name <- paste('rebuilding/Updated.Projections.March2022', 'F.rebuild', sep='/')
-# proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
+proj.dir.name <- paste('rebuilding/Updated.Projections.March2022', 'F.rebuild', sep='/')
+proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
 
 ### PStar
-proj.dir.name <- paste('rebuilding/Updated.Projections.March2022/PStar', rect.name, f.name, paste(2020,pstar.yr,sep="-"), sep='/')
-#proj.dir.name <- paste('rebuilding/Additional.Projections.May2022/PStar.Constant.Catch.Combo', "CC.6316mt", paste(2020,pstar.yr,sep="-"), sep='/')
-proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), paste("CV",CV,sep=""), toupper(f.name), sep='.')
+# proj.dir.name <- paste('rebuilding/Updated.Projections.March2022/PStar', rect.name, f.name, paste(2020,pstar.yr,sep="-"), sep='/')
+# #proj.dir.name <- paste('rebuilding/Additional.Projections.May2022/PStar.Constant.Catch.Combo', "CC.6316mt", paste(2020,pstar.yr,sep="-"), sep='/')
+# proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), paste("CV",CV,sep=""), toupper(f.name), sep='.')
 
 
 
@@ -44,8 +44,8 @@ run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.master.folder <- paste('projections',proj.dir.name, sep='.')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
 
-# proj.dir <- file.path(proj.master.dir, rect.name, f.name)
-proj.dir <- proj.master.dir
+proj.dir <- file.path(proj.master.dir, rect.name, f.name)
+# proj.dir <- proj.master.dir
 
 setwd(proj.dir)
 
