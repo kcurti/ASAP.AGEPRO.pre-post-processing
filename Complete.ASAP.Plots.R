@@ -13,8 +13,8 @@ library(dplyr)
 rm(list=ls())
 ls()
 
-run.no <- '11'
-retro <- 'y'
+run.no <- '9'
+retro <- 'n'
 mcmc <- 'n'
 
 # current.assess.dir <- c('//nefscfile/Atlantic_Mackerel/Kiersten_Curti/Modeling/2021.Management.Track')
@@ -42,8 +42,8 @@ PlotASAP(wd, asap.name)
 #############################
 
 
-# rdat <- paste0(asap.name, ".rdat")
-# asap <- dget(paste0(wd, "\\", rdat))
+rdat <- paste0(asap.name, ".rdat")
+asap <- dget(paste0(wd, "\\", rdat))
 
 
 # Compare recruitment to median
