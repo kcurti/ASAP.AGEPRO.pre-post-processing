@@ -119,8 +119,8 @@ rm(list=ls())
 ls()
 
 
-run.no <- '4'
-current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
+run.no <- '9'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
 
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
