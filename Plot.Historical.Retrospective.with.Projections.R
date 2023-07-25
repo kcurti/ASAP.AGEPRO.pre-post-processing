@@ -69,13 +69,10 @@ prev.model.yrs <- as.integer(rownames(prev.ests[[1]]))
 prev.model.lyr <- tail(prev.model.yrs, 1)
 
 
-
 ### Load previous short-term projection summary
 prev.proj.env <- new.env()
 load(file.path(prev.proj.dir,prev.proj.fname), envir=prev.proj.env)
 ls(prev.proj.env)
-# prev.proj.lyr <- min(proj.lyr, max(as.numeric(colnames(prev.proj.env$ssb.table)),na.rm=TRUE))
-# prev.proj.fyr <- min(as.numeric(colnames(prev.proj.env$ssb.table)),na.rm=TRUE)
 prev.proj.fyr <- prev.proj.env$proj.fyr
 prev.proj.lyr <- prev.proj.env$proj.lyr
 prev.proj.yrs <- prev.proj.fyr:prev.proj.lyr
@@ -84,21 +81,6 @@ prev.proj.ssb   <- prev.proj.env$ssb.table
 prev.proj.f     <- prev.proj.env$f.table
 prev.proj.rect  <- prev.proj.env$rect.table
 
-
-
-
-# # prev.mcmc <- read.csv(file.path(prev.assess.dir, 'mcmc.2000.it.1000.thin/plots','ssb.90pi_Run4.MCMC.csv') )
-# #   rownames(prev.mcmc) <- prev.mcmc$years
-# # 
-# 
-# 
-# 
-# # Previous projected and estimated SSB
-# prev.proj <- prev.proj.env$ssb.table[,as.character(prev.proj.fyr:prev.proj.lyr),drop=FALSE]
-#   rownames(prev.proj)[1] <- 'Estimate'
-# prev.ests <- hist.env$prev.ests$MT.2021[as.character(1968:(prev.lyr)),'SSB',drop=FALSE]
-#   colnames(prev.ests) <- 'Estimate'
-# #prev.ests.proj <- rbind(prev.ests, t(prev.proj))
 
 
 ### For a given variable, merge base run estimates and short-term projections 
@@ -126,25 +108,15 @@ prev.proj <- get(paste('prev.proj',tolower(var.name),sep='.'))[c('Median', '5th 
 prev.proj <- cbind.data.frame(t(prev.model[as.character(prev.model.lyr),,drop=FALSE]),prev.proj)
 
 
-  # ### Previous model estimates 
-  # prev.ests.plot.data <- cbind(prev.ests[as.character(plot.fyr:tail(rownames(prev.ests),1)),,drop=FALSE], 
-  #                              prev.mcmc[as.character(plot.fyr:tail(rownames(prev.ests),1)),c('X5th','X95th')] )
-  # prev.proj.plot.data <- cbind( as.matrix(rep(prev.ests[prev.lyr,],nrow(prev.proj))), prev.proj)
-  # # prev.proj.plot.data <- cbind(t(prev.ests[prev.lyr,]),prev.proj['Estimate',,drop=FALSE])
-  #   colnames(prev.proj.plot.data)[1] <- prev.lyr
 
-
-      
-  # Get current projection estimates
-  # proj.series <- get(paste(var.name,'proj',sep='.'))   
-
-
-
-current.model.plotdata <- current.model[as.character(plot.fyr, )]
+### Necessary objects for figure
+current.model
 prev.model
 current.proj
 prev.proj
-# cbind.data.frame(t(prev.model[as.character(prev.model.lyr),,drop=FALSE]),prev.proj)
+
+
+#### First figure: Full projections
 
 # Determine figure xlim, ylim
 ymax <- max(c(max(current.model[as.character(plot.fyr: model.lyr),]),
@@ -182,19 +154,67 @@ lines(c(model.lyr, proj.yrs), current.proj['Estimate',], lty=1, col='magenta', l
 lines(c(model.lyr, proj.yrs), current.proj['95low',],    lty=2, col='magenta', lwd=1)  
 lines(c(model.lyr, proj.yrs), current.proj['95hi',],     lty=2, col='magenta', lwd=1)  
 
-
-  axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
-  axis(side=1, at=axTicks(1), labels=TRUE, cex.axis=0.8, padj = -0.5)
-  box()
-  mtext(side=1, 'Year', line=0, outer=TRUE, cex=0.9)
-  mtext(side=2, yaxis.label, line=0, outer=TRUE, cex=0.9)
+# Axes, etc
+axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
+axis(side=1, at=axTicks(1), labels=TRUE, cex.axis=0.8, padj = -0.5)
+box()
+mtext(side=1, 'Year', line=0, outer=TRUE, cex=0.9)
+mtext(side=2, yaxis.label, line=0, outer=TRUE, cex=0.9)
   
-  abline(h = (ssb.brp), lty=2)
-  text(x=2007, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
+abline(h = (ssb.brp), lty=2)
+text(x=2007, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
 
-  #  if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('SSB.projections',f.name,'fyr',plot.fyr,'with.historical.wmf',sep='.'))) }
+if(save.fig=='y') { savePlot(file.path(proj.dir, paste('SSB.projections',F.name,'fyr',plot.fyr,'with.historical.wmf',sep='.'))) }
   
 
 
+#### Second figure: Projections only to new model termianl year
+
+# Determine figure xlim, ylim
+ymax <- max(c(max(current.model[as.character(plot.fyr: model.lyr),]),
+              max(prev.model[as.character(plot.fyr: prev.model.lyr),]),
+              # max(current.proj),
+              max(prev.proj[as.character(prev.model.lyr:model.lyr)])
+))
+
+y.lim <- c(0, ymax)
+x.lim <- c(plot.fyr, model.lyr)
+
+# Plot
+windows(width=6,height=5)
+par(mar=c(2, 2, 0.1, 1) +0.1);  par(oma=c(1.5,1.5,1.0,0))
+
+
+# Plot previous model estimates
+plot( prev.model.yrs, prev.model[,'Estimate'], xlim=x.lim, ylim=y.lim, axes=FALSE, type="l", lty=1, col='orange', lwd=2 ) 
+lines(prev.model.yrs, prev.model[,'95low'], lty=2, col='orange', lwd=1)
+lines(prev.model.yrs, prev.model[,'95hi'],  lty=2, col='orange', lwd=1)
+
+# Previous projections
+lines(c(prev.model.lyr, prev.proj.yrs), prev.proj['Estimate',], lty=1, col='darkgreen', lwd=2)  
+lines(c(prev.model.lyr, prev.proj.yrs), prev.proj['95low',],    lty=2, col='darkgreen', lwd=1)  
+lines(c(prev.model.lyr, prev.proj.yrs), prev.proj['95hi',],     lty=2, col='darkgreen', lwd=1)  
+
+# Plot current model estimates  
+lines(model.yrs, current.model[,'Estimate'], lty=1, col='black', lwd=2 ) 
+lines(model.yrs, current.model[,'95low'],    lty=2, col='black', lwd=2)
+lines(model.yrs, current.model[,'95hi'],     lty=2, col='black', lwd=2)
+
+# Current projections
+# lines(c(model.lyr, proj.yrs), current.proj['Estimate',], lty=1, col='magenta', lwd=2)  
+# lines(c(model.lyr, proj.yrs), current.proj['95low',],    lty=2, col='magenta', lwd=1)  
+# lines(c(model.lyr, proj.yrs), current.proj['95hi',],     lty=2, col='magenta', lwd=1)  
+
+# Axes, etc
+axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=0.8, padj = 0.5)
+axis(side=1, at=axTicks(1), labels=TRUE, cex.axis=0.8, padj = -0.5)
+box()
+mtext(side=1, 'Year', line=0, outer=TRUE, cex=0.9)
+mtext(side=2, yaxis.label, line=0, outer=TRUE, cex=0.9)
+
+abline(h = (ssb.brp), lty=2)
+text(x=2007, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
+
+if(save.fig=='y') { savePlot(file.path(proj.dir, paste('SSB.ests','fyr',plot.fyr,'with.historical.sub.wmf',sep='.'))) }
 
 
