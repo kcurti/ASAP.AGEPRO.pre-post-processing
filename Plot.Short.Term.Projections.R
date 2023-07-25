@@ -11,9 +11,8 @@ ls()
 
 
 # Run details
-run.no <- '4'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
-# current.assess.dir <- c('//net.nefsc.noaa.gov/home0/kcurti/Mackerel/Modeling/2021.Management.Track')
+run.no <- '9'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
 
 estimate.type <- 'point.est'   # 'median' or 'point.est'
 #  i.e the median MCMC estimates or the ASAP point estimates 
@@ -21,17 +20,17 @@ estimate.type <- 'point.est'   # 'median' or 'point.est'
 
 # Projection details
 
-proj.nyr.name <- 'rebuilding/Updated.Projections.March2022' 
+proj.nyr.name <- 'rebuilding' 
 # rect.scenarios <- c('Rect.1975', 'Rect.1999', 'Rect.2009')
 # f.name <- 'F.zero' # 'Fmsy.proxy' 'F.zero'
 
 nsim <- 100
-proj.fyr <- 2020
+proj.fyr <- 2023
 proj.lyr <- 2032
 
 
 # Final workspace name
-rdata.name <- 'Rebuilding.projections.March2022'
+rdata.name <- 'Rebuilding.projections'
 
 
 # Figure details
@@ -48,19 +47,13 @@ color.list <- c("magenta3", "limegreen", "steelblue1", "gold2", "blue", "purple"
 proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
 
 proj.name.list <- c(
-  'Rect 2009, 50% prob rebuild',
-  'Rect 2 Stanza, 50% prob rebuild',
-  'Rect 2 Stanza, 60% prob rebuild',
-  'Rect 2 stanza, P* at Fmsy',
-  'Rect 2 stanza, P* at Frebuild (50% prob)'
+  'Base',
+  '2022 rect = recent median'
 )
 
 proj.path.list <- c(
-  'F.rebuild/Rect.2009/F01',
-  'F.rebuild/Rect.2Stanza.90545mt/F14',
-  'F.rebuild/Rect.2Stanza.90545mt/F12',
-  'PStar/Rect.2Stanza.90545mt/Fmsy/2020-2032.2ndIter',
-  'PStar/Rect.2Stanza.90545mt/Frebuild/2020-2032.2ndIter'
+  'F11',
+  'Age2.35Percent/F07'
 )
 names(proj.path.list) <- proj.name.list
 
