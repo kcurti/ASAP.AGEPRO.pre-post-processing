@@ -34,7 +34,7 @@ rdata.name <- 'Rebuilding.projections'
 
 
 # Figure details
-save.fig <- 'n'
+save.fig <- 'y'
 fig.type <- 'wmf'
 color.list <- c("magenta3", "limegreen", "steelblue1", "gold2", "blue", "purple", 'seagreen')
 
@@ -48,7 +48,7 @@ proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
 
 proj.name.list <- c(
   'Base',
-  '2022 rect = recent median'
+  '2022 rect = 2009+ median'
 )
 
 proj.path.list <- c(
@@ -59,11 +59,8 @@ names(proj.path.list) <- proj.name.list
 
 
 proj.file.list <- c(
-  'F01.Rect.2009',
-  'F14.Rect.2Stanza.90545mt',
-  'F12.Rect.2Stanza.90545mt',
-  'FMSY.Rect.2Stanza.90545mt',
-  'Frebuild.Rect.2Stanza.90545mt'
+  'F11.Rect.2Stanza',
+  'F07.Rect.2Stanza'
 )
 names(proj.file.list) <- proj.name.list
 
@@ -103,20 +100,21 @@ lyr <- asap.env$lyr
 # Model estimates
 if(estimate.type == 'point.est')
 {
-  model.ests <- cbind.data.frame( asap.env$annual.ests, 
+  model.ests <- cbind.data.frame( asap.env$annual.ests[,c('SSB','Rect','F')], 
                                   t(asap.env$asap$catch.obs) )
 }
 if(estimate.type == 'median')
 {
-  model.ests <- cbind.data.frame( asap.env$median.annual.ests[,c('SSB','January 1 B')],
-                                  asap.env$annual.ests[,'Rect', drop=FALSE],
-                                  asap.env$median.annual.ests[,'F', drop=FALSE],
+  model.ests <- cbind.data.frame( asap.env$median.annual.ests[,c('SSB','Rect','F')],
                                   t(asap.env$asap$catch.obs) )
 }
-colnames(model.ests) <- c('ssb','biomass','rect', 'f', 'catch')
-ssb.ests <- asap.env$ssb.ests
-biomass.ests <- asap.env$biomass.ests
-f.ests <- asap.env$f.ests
+colnames(model.ests) <- c('ssb','rect', 'f', 'catch')
+# CIs
+mcmc.ests <- asap.env$mcmc.ests
+colnames(mcmc.ests) <- c('year','ssb','ssb.lo','ssb.hi',
+                         'rect','rect.lo','rect.hi',
+                         'f','f.lo','f.hi')
+rownames(mcmc.ests) <- mcmc.ests$year
 
 
 ### Create template list for projections
@@ -145,7 +143,6 @@ for (proj.run in proj.name.list)
   load( file.path(proj.dir, paste(proj.file.list[proj.run],'Projection.summary.RDATA',sep=".")), envir=proj.env )
   
   ssb.proj[[proj.run]]     <- proj.env$ssb.table[,proj.yrs]
-  biomass.proj[[proj.run]] <- proj.env$biomass.table[,proj.yrs]
   catch.proj[[proj.run]]   <- proj.env$catch.table[,proj.yrs]
   f.proj[[proj.run]]       <- proj.env$f.table[,proj.yrs]
   rect.proj[[proj.run]]    <- proj.env$rect.table[,proj.yrs]
@@ -164,20 +161,25 @@ plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.
   # var.name <- 'ssb';   yaxis.label <- 'SSB (mt)';            plot.fyr <- 2000;  legend.location <- 'topright'
   # var.name <- 'rect';  yaxis.label <- 'Recruitment (000s)';  plot.fyr <- 2000;  legend.location <- 'topright'
   
-  # Get ASAP and MCMC estimates
+  # Get final estimates
   var.asap <- model.ests[,var.name,drop=FALSE]
-  colnames(var.asap) <- 'Estimate'
-  if(var.name %in% c('ssb','biomass', 'f'))  { 
-    mcmc <- get(paste(var.name,'ests',sep='.'))[,c('X5th','X95th')] 
+    colnames(var.asap) <- 'Estimate'
+  # Get CIs    
+  if(var.name != 'catch')  
+  {
+    mcmc.var.list <- paste(var.name,c('lo','hi'),sep='.')
+    mcmc <- mcmc.ests[,mcmc.var.list]
+    colnames(mcmc) <- c('X5th','X95th')
   }  else {
     mcmc <- cbind(var.asap,var.asap)
     colnames(mcmc) <- c('X5th','X95th')
   }
   
+  # Merge  
   merged.asap <- merge(var.asap[as.character(plot.fyr:lyr),,drop=FALSE], mcmc[as.character(plot.fyr:lyr),], by="row.names",all=TRUE)
   rownames(merged.asap) <- merged.asap$'Row.names'
   colnames(merged.asap)[colnames(merged.asap)=='Row.names'] <- 'Year'
-  
+    
   # Get projection estimates
   proj.series <- get(paste(var.name,'proj',sep='.'))   
   
@@ -203,7 +205,7 @@ plot.short.term.projections <- function(var.name, yaxis.label, plot.fyr, legend.
     proj.run <- proj.name.list[i]
     
     x.vec <- as.numeric(c(lyr,proj.yrs))
-    y.vec <- cbind(merged.asap[as.character(lyr),'Estimate'], as.vector(proj.series[[proj.run]]['Median',]))
+    y.vec <- cbind(merged.asap[as.character(lyr),'Estimate'], proj.series[[proj.run]]['Median',])
     lines(x.vec, y.vec, col=color.list[i], lty=1, lwd=2)
     
     l.ci <- cbind(merged.asap[as.character(lyr),'X5th'], proj.series[[proj.run]]['5th Percentile',])
@@ -229,15 +231,6 @@ plot.short.term.projections('ssb',  'Spawning stock biomass (mt)', plot.fyr, 'to
   abline(h = (ssb.brp), lty=2)
   text(x=plot.fyr, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
 if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
-
-
-### Biomass
-# plot.fyr <- 2005
-# plot.short.term.projections('biomass',  'January 1 biomass (mt)', plot.fyr, 'topleft')
-#   # Bmsy
-#   abline(h = (biomass.brp), lty=2)
-#   text(x=(2007), y=(biomass.brp+15000), labels=bquote('B'['MSY PROXY'] ~ '=' ~ .(format(round((biomass.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
-# if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('biomass.projections',f.name,'fyr',plot.fyr,'wmf',sep='.'))) }
 
 
 ### Catch
@@ -290,12 +283,11 @@ catch.proj.lyr <- do.call(rbind, lapply(catch.proj, function(x) {x['Median',as.c
   
   
 ### Save workspace
-setwd(base.proj.dir)
-save.image(paste(rdata.name, 'Proj.Summary.RDATA', sep='.'))
+save.image(file.path(base.proj.dir, paste(rdata.name, 'Proj.Summary.RDATA', sep='.')))
 
-write.csv(rect.proj.lyr, 'Median.Rect.proj.lyr.csv')
-write.csv(ssb.combined, 'Median.SSB.proj.lyr.csv')
-write.csv(catch.proj.lyr, 'Median.Catch.proj.lyr.csv')
+write.csv(rect.proj.lyr, file.path(base.proj.dir, 'Median.Rect.proj.lyr.csv'))
+write.csv(ssb.combined, file.path(base.proj.dir, 'Median.SSB.proj.lyr.csv'))
+write.csv(catch.proj.lyr, file.path(base.proj.dir, 'Median.Catch.proj.lyr.csv'))
 
 
 
