@@ -324,3 +324,49 @@ proj.name.list <- c(
 
 n.proj <- length(proj.name.list)
 
+
+##########################
+
+#### Second figure retry in ggplot: Projections only to new model terminal year
+
+library(tidyverse)
+
+tidy.merged.asap <- tibble(merged.asap) %>%
+  rename(Percentile5 = X5th,
+         Percentile95 = X95th,
+         Median = Estimate) %>%
+  mutate(Year = as.integer(Year),
+         Estimate='ASAP')
+
+proj.series.tmp <- lapply(proj.series, 
+                          function (x) {
+                            as_tibble(t(x)) %>%
+                              rename(Percentile5 = '5th Percentile',
+                                     Percentile40 = '40th Percentile',
+                                     Percentile75 = '75th Percentile',
+                                     Percentile95 = '95th Percentile') %>%
+                              mutate(Year = as.integer(colnames(x))) %>%
+                              bind_rows(., tidy.merged.asap%>%filter(Year==lyr))
+                          })
+tidy.proj.series <- bind_rows(proj.series.tmp, .id="Estimate")
+
+
+plot.data <- bind_rows(tidy.merged.asap, tidy.proj.series)
+
+windows(width=11, height=8)
+plot.data %>% 
+  filter(Year >=2010) %>%
+  ggplot(aes(Year, Median)) +
+  theme(text = element_text(size=13)) +
+  geom_line(aes(color=Estimate)) +
+  geom_ribbon(aes(ymin = Percentile5, ymax = Percentile95, fill=Estimate), alpha = 0.2, linetype='blank') +
+  ylab("SSB (mt)") + 
+  theme(legend.position = "none") +
+  geom_hline(yintercept=ssb.brp, lty=2) +
+  annotate(
+    "text",
+    x=2015,
+    y=ssb.brp+10000,
+    label=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt')
+  )
+
