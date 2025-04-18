@@ -168,7 +168,7 @@ if(save.fig=='y') { savePlot(file.path(proj.dir, paste('SSB.projections',F.name,
   
 
 
-#### Second figure: Projections only to new model termianl year
+#### Second figure: Projections only to new model terminal year
 
 # Determine figure xlim, ylim
 ymax <- max(c(max(current.model[as.character(plot.fyr: model.lyr),]),
@@ -216,5 +216,55 @@ abline(h = (ssb.brp), lty=2)
 text(x=2007, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
 
 if(save.fig=='y') { savePlot(file.path(proj.dir, paste('SSB.ests','fyr',plot.fyr,'with.historical.sub.wmf',sep='.'))) }
+
+
+
+save.image(file.path(proj.dir, "Historical.Retro.With.Projections.RDATA"))
+
+
+
+#### Second figure retry in ggplot: Projections only to new model terminal year
+
+library(tidyverse)
+
+tidy.current.model <- tibble(current.model) %>%
+  mutate(Year = as.integer(rownames(current.model))) %>%
+  rename(low95 = '95low',
+         hi95  = '95hi') %>%
+  mutate(Estimates = '2023 MT')
+
+tidy.prev.model <-tibble(prev.model) %>%
+  mutate(Year = as.integer(rownames(prev.model))) %>%
+  rename(low95 = '95low',
+         hi95  = '95hi') %>%
+  mutate(Estimates = '2021 MT')
+
+tidy.prev.proj <- tibble(Estimate=as.numeric(prev.proj['Estimate',]),
+                         low95=as.numeric(prev.proj['95low',]),
+                         hi95=as.numeric(prev.proj['95hi',]),
+                         Year=as.integer(colnames(prev.proj)),
+                         Estimates = '2021 MT proj'
+                         )
+  
+plot.data <- bind_rows(tidy.prev.model, tidy.prev.proj) %>%
+  bind_rows(., tidy.current.model)
+
+windows(width=11, height=8)
+plot.data %>% 
+  filter(Year %in% 2000:2022) %>%
+  ggplot(aes(Year, Estimate)) +
+  theme(text = element_text(size=13)) +
+  geom_line(aes(color=Estimates)) +
+  geom_ribbon(aes(ymin = low95, ymax = hi95, fill=Estimates), alpha = 0.2, linetype='blank') +
+  ylab("SSB (mt)") + 
+  geom_hline(yintercept=ssb.brp, lty=2) +
+  annotate(
+    "text",
+    x=2015,
+    y=ssb.brp+10000,
+    label=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt')
+  )
+if(save.fig=='y') { ggsave(file.path(proj.dir, paste('GGplot.SSB.ests','fyr',plot.fyr,'with.historical.sub.png',sep='.'))) }
+
 
 
