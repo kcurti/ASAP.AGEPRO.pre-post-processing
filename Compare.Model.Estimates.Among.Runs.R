@@ -4,11 +4,11 @@
 rm(list=ls())
 ls()
 
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
-lyr <- 2022
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Scup/ASAP')
+lyr <- 2024
 
 save.fig <- 'y'
-fig.type <- 'tif'
+fig.type <- 'png'
 
 
 #########################################
@@ -38,13 +38,10 @@ prepare.run.ests <- function(run.list) {
   for (run.no in run.list)
   {
     # run.no <- 2
-    run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+    run.dir <- file.path(current.assess.dir, paste('run',run.no,sep=''), "asap","base")
     asap.name <- paste('Run',run.no,sep='')
     # Import ASAP summary file
     asap.summary <- read.csv(file.path(run.dir, "plots", paste('ASAP_summary_', asap.name, '.csv', sep="")))
-    # annual.ests <- asap.summary[,c('Year','SSB','Recr','Freport')]
-    #   colnames(annual.ests) <- c('Year','SSB','Rect','F')
-    # run.ests[[as.character(run.no)]] <- annual.ests
     run.ests[[as.character(run.no)]] <- asap.summary
   }
   run.ests  
@@ -52,7 +49,7 @@ prepare.run.ests <- function(run.list) {
 
 
 
-plot.run.estimates <- function(var.name, var.label.name, plot.fyr, line.width, legend.loc, legend.type)
+plot.run.comparison <- function(var.name, var.label.name, plot.fyr, line.width, legend.loc, legend.type)
 {
   
   # var.name <- 'SSB'; var.label.name <- 'SSB (mt)'; plot.fyr <- 1968; legend.loc='topright'; legend.type='ordered'
@@ -99,20 +96,19 @@ plot.run.estimates <- function(var.name, var.label.name, plot.fyr, line.width, l
 #############################
 
 
-run.list <- c(9,2:7)
-  names(run.list) <- c('Final','Initial','Updated maturity','Updated WAA','Updated Catch','Updated egg index','Updated trawl survey indices')
-comp.name <- 'Runs2-7.9'
+run.list <- c(2:4)
+  names(run.list) <- c('1963','1984','1989')
+comp.name <- 'Runs2-4'
     
 run.ests <- prepare.run.ests(run.list=run.list)  
 
-plot.fyr <- 1968  
+plot.fyr <- 1963  
 plot.run.estimates(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
 
 plot.run.estimates(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
 
-plot.fyr <- 1975  
 plot.run.estimates(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
