@@ -1,6 +1,7 @@
 # ASAP.packages <- c('dplyr','Hmisc','officer','plotMCMC','plotrix','readr','reshape2','tseries')
 # install.packages(ASAP.packages)
-# devtools::install_github("cmlegault/ASAPplots", build_vignettes = TRUE)
+# # devtools::install_github("cmlegault/ASAPplots", build_vignettes = TRUE)
+# pak::pkg_install("cmlegault/ASAPplots")
 
 
 ##################################################################
@@ -13,19 +14,20 @@ library(dplyr)
 rm(list=ls())
 ls()
 
-run.no <- '9'
+run.no <- '21'
 retro <- 'n'
 mcmc <- 'n'
 
-# current.assess.dir <- c('//nefscfile/Atlantic_Mackerel/Kiersten_Curti/Modeling/2021.Management.Track')
-# current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2021.MT.Modeling')
-current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2023.Management.Track')
-base.wd <- file.path(current.assess.dir,paste('Run',run.no,sep=''))
+# current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2023.Management.Track')
+current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Scup/ASAP')
+base.wd <- file.path(current.assess.dir,paste('Run',run.no,sep=''),"asap")
 wd <- base.wd
 
-asap.name <- paste('Run',run.no,sep='')
 
-
+if(retro=='n' && mcmc=='n')  {
+  wd <- file.path(base.wd,'base')
+  asap.name <- paste('Run',run.no,sep='')
+}
 if(retro=='y')  {
   wd <- file.path(base.wd,'retro')
   asap.name <- paste('Run',run.no,'.RETRO',sep='')
