@@ -14,11 +14,10 @@ current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Mana
 
 # Projection details
 
-#yc.name <- 'M04'
 rect.name <- 'Rect.2Stanza' #   'Rect.2009' # 
-f.name <- 'F07' # 'FMSY' # 
+f.name <- 'F21' # 'FMSY' # 
 
-proj.dir.name <- 'rebuilding/Age2.35Percent'
+proj.dir.name <- 'rebuilding/Base'
 proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
 
 
@@ -45,10 +44,8 @@ run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.master.folder <- paste('projections',proj.dir.name, sep='.')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
 
-# proj.dir <- file.path(proj.master.dir, yc.name, f.name)
 proj.dir <- file.path(proj.master.dir, f.name)
-# proj.dir <- file.path(proj.master.dir, 'F11.Ages1-2.35Percent')
-
+# proj.dir <- file.path(proj.master.dir, 'AvgABC_4800mt')
 
 
 
@@ -146,4 +143,4 @@ write.csv(combined.table, file.path(proj.dir, paste(f.name, rect.name, 'Short.te
 
 
 
-load(file.path(proj.dir, paste(f.name, rect.name, 'Projection.summary.RDATA', sep='.')))
+# load(file.path(proj.dir, paste(f.name, rect.name, 'Projection.summary.RDATA', sep='.')))
