@@ -3,6 +3,8 @@
 # # devtools::install_github("cmlegault/ASAPplots", build_vignettes = TRUE)
 # pak::pkg_install("cmlegault/ASAPplots")
 
+install.packages("devtools")
+devtools::install_github("cmlegault/ASAPplots", build_vignettes = TRUE)
 
 ##################################################################
 
@@ -14,18 +16,18 @@ library(dplyr)
 rm(list=ls())
 ls()
 
-run.no <- '21'
+run.no <- '8'
 retro <- 'n'
 mcmc <- 'n'
 
-# current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2023.Management.Track')
-current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Scup/ASAP')
-base.wd <- file.path(current.assess.dir,paste('Run',run.no,sep=''),"asap")
+current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/2025.Management.Track')
+# current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Scup/ASAP')
+base.wd <- file.path(current.assess.dir,paste('Run',run.no,sep=''))
 wd <- base.wd
 
 
 if(retro=='n' && mcmc=='n')  {
-  wd <- file.path(base.wd,'base')
+  wd <- file.path(base.wd)
   asap.name <- paste('Run',run.no,sep='')
 }
 if(retro=='y')  {
