@@ -18,7 +18,7 @@ ls()
 
 run.no <- '8'
 retro <- 'n'
-mcmc <- 'n'
+mcmc <- 'y'
 
 current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/2025.Management.Track')
 # current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Scup/ASAP')

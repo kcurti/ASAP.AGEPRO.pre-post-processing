@@ -12,11 +12,10 @@ rm(list=ls())
 ls()
 
 
-run.no <- '9'
+run.no <- '8'
 mcmc.folder.name <- 'mcmc.2000.it.1000.thin'
 
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
-# current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 
 estimate.type <- 'point.est'   # 'median' or 'point.est'
 
