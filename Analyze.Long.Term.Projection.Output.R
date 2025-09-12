@@ -9,8 +9,8 @@ ls()
 
 
 # Run details
-run.no <- '9'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+run.no <- '8'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 
 # Projection details
 proj.run <- 'Rect.1975.Onward'

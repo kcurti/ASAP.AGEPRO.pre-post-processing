@@ -8,10 +8,10 @@
 rm(list=ls())
 ls()
 
-run.no <- '9'
+run.no <- '8'
 avg.nyrs <- 5
 
-current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2023.Management.Track')
+current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/2025.Management.Track')
 
 
 #############
