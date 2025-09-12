@@ -9,28 +9,29 @@ save.fig <- 'y'
 
 
 # ASAP details
-run.no <- '9'
+run.no <- '8'
 
 
 source("~/R/Directory_Paths.R")
 # Network modeling directory (containing previous assessments)
 modeling.dir <- file.path(mack.net.dir, 'Kiersten_Curti/Modeling')
 # Current assessment name
-current.assess <- '2023.Management.Track'
-  names(current.assess) <- 'MT.2023'
+current.assess <- '2025.Management.Track'
+  names(current.assess) <- 'MT.2025'
 estimate.type <- 'point.est'   # 'median' or 'point.est'
                                # i.e the median MCMC estimates or the ASAP point estimates 
   
 # Vector of previous assessment names to include (that are not in the historical assessment spreadsheet); These names correspond to the modeling folder name
-prev.assess <- c('2017.Benchmark','2021.Management.Track')
-  names(prev.assess) <- c('Bench.2017','MT.2021')
+prev.assess <- c('2017.Benchmark','2021.Management.Track','2023.Management.Track')
+  names(prev.assess) <- c('Bench.2017','MT.2021','MT.2023')
 # Vector of final runs corresponding to each previous assessment
 final.runs <- prev.assess
   final.runs['Bench.2017'] <- 'Run118'
   final.runs['MT.2021']    <- 'Run4'
+  final.runs['MT.2023']    <- 'Run9'
   
 # Directory for current assessment
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
  
    
 ########################################################
@@ -189,7 +190,7 @@ plot.Rect <- function(prev.assess.4.plot, write.xlab, plot.fyr)
 
 
 ### Create Historical Retrospective plot
-prev.assess.4.plot <- c("MT.2021","Bench.2017","TRAC"); 
+prev.assess.4.plot <- c("MT.2023","MT.2021","Bench.2017","TRAC"); 
 assess.name.labels.all <- c(current.assess, prev.assess, hist.assess)
 assess.name.labels <- assess.name.labels.all[c(names(current.assess), prev.assess.4.plot)]
   
