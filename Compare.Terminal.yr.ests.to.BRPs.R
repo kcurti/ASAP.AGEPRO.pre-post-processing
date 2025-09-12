@@ -8,10 +8,10 @@
 rm(list=ls())
 ls()
 
-run.no <- '9'
+run.no <- '8'
 proj.run <- 'Rect.1975.Onward'
 # current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 
 estimate.type <- 'point.est'   # 'median' or 'point.est'
                                #  i.e the median MCMC estimates or the ASAP point estimates 
@@ -76,7 +76,9 @@ lines(fyr.ssb.tmt, fyr.f, type='p',col='red', pch=16, cex=1.1)
 # Last year values
 lines(lyr.ssb.tmt, lyr.f, type='p',col='red', pch=16, cex=1.1)
 # Labels for first and last year values
-text(x=ssb.label.ests, y=f.label.ests, labels=names(f.label.ests), cex= 1.0, pos=1, font=2, col='red')
+# text(x=ssb.label.ests, y=f.label.ests, labels=names(f.label.ests), cex= 1.0, pos=1, font=2, col='red')
+text(x=ssb.label.ests[1], y=f.label.ests[1], labels=names(f.label.ests)[1], cex= 1.0, pos=1, font=2, col='red')
+text(x=ssb.label.ests[2], y=f.label.ests[2], labels=names(f.label.ests)[2], cex= 1.0, pos=4, font=2, col='red')
 # Fmsy
 abline(h = f.brp, lty=2)
 # 1/2 SSBmsy
@@ -91,7 +93,7 @@ text(x=(ssb.brp/1000), y=1.7, labels=bquote('SSB'['40%'] ~ '= SSB'['MSY PROXY'] 
 # Fmsy
 text(x=700, y=f.brp, labels=bquote('F'['40%'] ~ '= F'['MSY PROXY'] ~ '=' ~ .(f.brp)), cex= 0.8, pos=3)
 
-if(save.fig == 'y'){savePlot(file.path(output.dir, 'Phase.plot.wmf'))}
+if(save.fig == 'y'){savePlot(file.path(output.dir, 'Phase.plot.png'),type='png')}
 
 
 
@@ -124,7 +126,9 @@ arrows(lyr.ssb.tmt, lyr.f, lyr.ssb.tmt.lci, lyr.f, length=0.05, angle=90, code=3
 arrows(lyr.ssb.tmt, lyr.f, lyr.ssb.tmt.uci, lyr.f, length=0.05, angle=90, code=3, col='red')
 
 # Labels for first and last year values
-text(x=ssb.label.ests, y=f.label.ests, labels=names(f.label.ests), cex= 1.0, pos=1, font=2, col='red')
+# text(x=ssb.label.ests, y=f.label.ests, labels=names(f.label.ests), cex= 1.0, pos=1, font=2, col='red')
+text(x=ssb.label.ests[1], y=f.label.ests[1], labels=names(f.label.ests)[1], cex= 1.0, pos=1, font=2, col='red')
+text(x=ssb.label.ests[2], y=f.label.ests[2], labels=names(f.label.ests)[2], cex= 1.0, pos=4, font=2, col='red')
 # Fmsy
 abline(h = f.brp, lty=2)
 # 1/2 SSBmsy
@@ -139,7 +143,7 @@ text(x=(ssb.brp/1000), y=1.7, labels=bquote('SSB'['40%'] ~ '= SSB'['MSY PROXY'] 
 # Fmsy
 text(x=700, y=f.brp, labels=bquote('F'['40%'] ~ '= F'['MSY PROXY'] ~ '=' ~ .(f.brp)), cex= 0.8, pos=3)
 
-if(save.fig == 'y'){savePlot(file.path(output.dir, 'Phase.plot.with.cis.wmf'))}
+if(save.fig == 'y'){savePlot(file.path(output.dir, 'Phase.plot.with.cis.png'),type='png')}
 
 
 
@@ -173,5 +177,6 @@ output.dir <- file.path(run.wd,'outputs')
 
 
 load(file.path(output.dir, 'Comparison.with.BRPs.RDATA'))
+
 
 
