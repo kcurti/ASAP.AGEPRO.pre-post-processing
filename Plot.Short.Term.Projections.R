@@ -11,8 +11,8 @@ ls()
 
 
 # Run details
-run.no <- '9'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+run.no <- '8'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 
 estimate.type <- 'point.est'   # 'median' or 'point.est'
 #  i.e the median MCMC estimates or the ASAP point estimates 
@@ -20,12 +20,12 @@ estimate.type <- 'point.est'   # 'median' or 'point.est'
 
 # Projection details
 
-proj.nyr.name <- 'rebuilding' 
+proj.folder.name <- 'rebuilding' 
 # rect.scenarios <- c('Rect.1975', 'Rect.1999', 'Rect.2009')
 # f.name <- 'F.zero' # 'Fmsy.proxy' 'F.zero'
 
 nsim <- 100
-proj.fyr <- 2023
+proj.fyr <- 2025
 proj.lyr <- 2032
 
 
@@ -35,7 +35,7 @@ rdata.name <- 'Rebuilding.projections'
 
 # Figure details
 save.fig <- 'y'
-fig.type <- 'wmf'
+fig.type <- 'png'
 color.list <- c("magenta3", "limegreen", "steelblue1", "gold2", "blue", "purple", 'seagreen')
 
 
@@ -44,23 +44,20 @@ color.list <- c("magenta3", "limegreen", "steelblue1", "gold2", "blue", "purple"
 
 
 
-proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
+proj.master.folder <- paste('projections',proj.folder.name, sep='.')
 
 proj.name.list <- c(
-  'Base',
-  '2022 rect = 2009+ median'
+  'Fmsy proxy'
 )
 
 proj.path.list <- c(
-  'F11',
-  'Age2.35Percent/F07'
+  'F20'
 )
 names(proj.path.list) <- proj.name.list
 
 
 proj.file.list <- c(
-  'F11.Rect.2Stanza',
-  'F07.Rect.2Stanza'
+  'F20.Rect.2Stanza'
 )
 names(proj.file.list) <- proj.name.list
 
@@ -73,7 +70,7 @@ n.proj <- length(proj.name.list)
 #   names(proj.run.list) <- paste(do.call(rbind, strsplit(rect.scenarios, "\\."))[,2], 'Onward')
 # n.proj <- length(proj.run.list)
 
-# proj.fname.list <- paste('PROJECTIONS', toupper(proj.nyr.name), nsim, 'SIMS', toupper(rect.scenarios), toupper(f.name), sep='.')
+# proj.fname.list <- paste('PROJECTIONS', toupper(proj.folder.name), nsim, 'SIMS', toupper(rect.scenarios), toupper(f.name), sep='.')
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.dir,'outputs')
@@ -232,6 +229,12 @@ plot.short.term.projections('ssb',  'Spawning stock biomass (mt)', plot.fyr, 'to
   text(x=plot.fyr, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
 if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
 
+plot.fyr <- 1968
+plot.short.term.projections('ssb',  'Spawning stock biomass (mt)', plot.fyr, 'topleft')
+# SSBmsy
+  abline(h = (ssb.brp), lty=2)
+  text(x=plot.fyr, y=(ssb.brp+10000), labels=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt'), cex= 0.8, pos=4)
+if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('ssb.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
 
 ### Catch
 #plot.fyr <- 2017
@@ -250,16 +253,16 @@ plot.short.term.projections('f',  'F', plot.fyr, 'topright')
   text(x=(plot.fyr), y=(f.brp-0.1), labels=bquote('FMSY'['PROXY'] ~ '=' ~ .(format(round((f.brp),2),big.mark=','))), cex= 0.8, pos=4)
 if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('f.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
 
-plot.fyr <- 2017
-plot.short.term.projections('f',  'F', plot.fyr, 'topright')
-# FMSY
-  abline(h = (f.brp), lty=2)
-  text(x=(plot.fyr+10), y=(f.brp+0.05), labels=bquote('FMSY'['PROXY'] ~ '=' ~ .(format(round((f.brp),2),big.mark=','))), cex= 0.8, pos=4)
-if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('f.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
+# plot.fyr <- 2017
+# plot.short.term.projections('f',  'F', plot.fyr, 'topright')
+# # FMSY
+#   abline(h = (f.brp), lty=2)
+#   text(x=(plot.fyr+10), y=(f.brp+0.05), labels=bquote('FMSY'['PROXY'] ~ '=' ~ .(format(round((f.brp),2),big.mark=','))), cex= 0.8, pos=4)
+# if(save.fig=='y') { savePlot(file.path(base.proj.dir, paste('f.projections.fyr',plot.fyr,fig.type,sep='.')), type=fig.type) }
 
 
 ### Rect
-plot.fyr <- 2010
+plot.fyr <- 1975
 plot.short.term.projections('rect',  'Recruitment (000s)', plot.fyr, 'topleft')
 plot.ref <- rect.at.brp/1000
   abline(h = (plot.ref), lty=2)
@@ -301,13 +304,13 @@ rm(list=ls())
 ls()
 
 run.no <- '4'
-proj.nyr.name <- 'rebuilding/Updated.Projections.March2022' 
+proj.folder.name <- 'rebuilding/Updated.Projections.March2022' 
 rdata.name <- 'Rebuilding.projections.March2022'
 
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 
-proj.master.folder <- paste('projections',proj.nyr.name, sep='.')
+proj.master.folder <- paste('projections',proj.folder.name, sep='.')
 base.proj.dir <- file.path(run.dir, proj.master.folder)
 
 setwd(base.proj.dir)
