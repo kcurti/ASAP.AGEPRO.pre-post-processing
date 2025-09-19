@@ -81,6 +81,7 @@ box()
 mtext(side=1,"Spawning stock biomass (000s mt)", line=0, outer=TRUE, cex=0.9)
 mtext(side=2,'Fishing mortality', line=0, outer=TRUE, cex=0.9)
 if(save.fig) {savePlot(file=file.path(output.dir, paste("Terminal.yr.and.Retro.adj.values.with.CIs",fig.type,sep=".")),type=fig.type)}
+if(save.fig) {savePlot(file=file.path(output.dir, paste("Terminal.yr.and.Retro.adj.values.with.CIs","wmf",sep=".")),type="wmf")}
 
 
 ### Confirm whether retro adjustment is needed based on terminal year CIs and retro adjusted values
@@ -118,13 +119,14 @@ rm(list=ls())
 ls()
 
 
-run.no <- '9'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+run.no <- '8'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.dir,'outputs')
 load( file.path(output.dir, paste('Run',run.no,'.Retrospective.Analysis.RDATA',sep='')) )
+
 
 
 
