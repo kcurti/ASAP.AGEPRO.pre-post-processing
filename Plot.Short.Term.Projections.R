@@ -20,7 +20,7 @@ estimate.type <- 'point.est'   # 'median' or 'point.est'
 
 # Projection details
 
-proj.folder.name <- 'rebuilding' 
+proj.folder.name <- 'short.term' 
 # rect.scenarios <- c('Rect.1975', 'Rect.1999', 'Rect.2009')
 # f.name <- 'F.zero' # 'Fmsy.proxy' 'F.zero'
 
