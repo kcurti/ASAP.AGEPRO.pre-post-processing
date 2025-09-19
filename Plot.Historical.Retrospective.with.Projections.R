@@ -12,24 +12,27 @@ ls()
 save.fig <- 'n'
 
 ### Current run information
-run.no <- '9'
-proj.name <- 'rebuilding' 
-F.name <- "F11"
-proj.fname <- paste('F11.Rect.2Stanza', 'Projection.Summary.RDATA', sep='.')
+
+run.no <- '8'
+proj.name <- 'short.term' 
+F.name <- "F20"
+proj.fname <- paste('F20.Rect.2Stanza', 'Projection.Summary.RDATA', sep='.')
 
 ### Set Model directory
-modeling.dir <- 'C:/Users/Kiersten.Curti/Desktop/Work/Mackerel'
+source("~/R/Directory_Paths.R")
+desktop.dir <- 'C:/Users/kiersten.curti/Desktop'
+modeling.dir <- file.path(mack.net.dir, 'Kiersten_Curti/Modeling')
 
 ### Current run directories
-current.assess.dir <- file.path(modeling.dir, '2023.Management.Track')
+current.assess.dir <- file.path(desktop.dir, '2025.Management.Track')
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.dir <- file.path(run.dir, paste('projections',proj.name,sep='.'), F.name)
 
-### Previous run diretories and file names
-prev.assess.dir <- file.path(modeling.dir, '2021.MT.Modeling')
-prev.run.dir <- file.path(prev.assess.dir, 'Run4')
-prev.proj.dir <- file.path(prev.run.dir,'projections.rebuilding/Updated.Projections.March2022/F.rebuild/Rect.2Stanza.90545mt/F12')
-prev.proj.fname <- 'F12.Rect.2Stanza.90545mt.Projection.summary.RDATA'
+### Previous run directories and file names
+prev.assess.dir <- file.path(modeling.dir, '2023.Management.Track')
+prev.run.dir <- file.path(prev.assess.dir, 'Run9')
+prev.proj.dir <- file.path(prev.run.dir,'projections.rebuilding/Base/F11')
+prev.proj.fname <- 'F11.Rect.2Stanza.Projection.Summary.RDATA'
 
 
 ### Load current model estimates (via historical retrospective workspace)
@@ -62,7 +65,7 @@ ssb.brp <- brp.env$ssb.brp
 
 ### Load previous model estimates
 prev.assess.env <- new.env()
-load(file.path(prev.run.dir, 'outputs', 'Historical.retrospective.partial.RDATA'), envir = prev.assess.env)
+load(file.path(prev.run.dir, 'outputs', 'Historical.retrospective.comparison.RDATA'), envir = prev.assess.env)
 ls(prev.assess.env)
 prev.ests <- prev.assess.env$current.ests
 prev.model.yrs <- as.integer(rownames(prev.ests[[1]]))
@@ -219,9 +222,6 @@ if(save.fig=='y') { savePlot(file.path(proj.dir, paste('SSB.ests','fyr',plot.fyr
 
 
 
-save.image(file.path(proj.dir, "Historical.Retro.With.Projections.RDATA"))
-
-
 
 #### Second figure retry in ggplot: Projections only to new model terminal year
 
@@ -231,31 +231,41 @@ tidy.current.model <- tibble(current.model) %>%
   mutate(Year = as.integer(rownames(current.model))) %>%
   rename(low95 = '95low',
          hi95  = '95hi') %>%
-  mutate(Estimates = '2023 MT')
+  mutate(Estimates = '2025 MT')
 
 tidy.prev.model <-tibble(prev.model) %>%
   mutate(Year = as.integer(rownames(prev.model))) %>%
   rename(low95 = '95low',
          hi95  = '95hi') %>%
-  mutate(Estimates = '2021 MT')
+  mutate(Estimates = '2023 MT')
 
 tidy.prev.proj <- tibble(Estimate=as.numeric(prev.proj['Estimate',]),
                          low95=as.numeric(prev.proj['95low',]),
                          hi95=as.numeric(prev.proj['95hi',]),
                          Year=as.integer(colnames(prev.proj)),
-                         Estimates = '2021 MT proj'
+                         Estimates = '2023 MT proj'
                          )
   
 plot.data <- bind_rows(tidy.prev.model, tidy.prev.proj) %>%
   bind_rows(., tidy.current.model)
 
-windows(width=11, height=8)
+windows(width=9, height=6)
+# Define the custom color and fill palettes
+# custom_colors <- c("#7fc97f", "#beaed4", "#fdc086")
+# custom_fills <- c("#7fc97f", "#beaed4", "#fdc086")
+
 plot.data %>% 
-  filter(Year %in% 2000:2022) %>%
+  filter(Year %in% 2000:2024) %>%
   ggplot(aes(Year, Estimate)) +
   theme(text = element_text(size=13)) +
   geom_line(aes(color=Estimates)) +
   geom_ribbon(aes(ymin = low95, ymax = hi95, fill=Estimates), alpha = 0.2, linetype='blank') +
+
+  #   # Manually set the color palette for the lines
+  # scale_color_manual(values = custom_colors) +
+  # # Manually set the fill palette for the ribbons
+  # scale_fill_manual(values = custom_fills) +
+
   ylab("SSB (mt)") + 
   geom_hline(yintercept=ssb.brp, lty=2) +
   annotate(
@@ -266,5 +276,7 @@ plot.data %>%
   )
 if(save.fig=='y') { ggsave(file.path(proj.dir, paste('GGplot.SSB.ests','fyr',plot.fyr,'with.historical.sub.png',sep='.'))) }
 
+
+save.image(file.path(proj.dir, "Historical.Retro.With.Projections.RDATA"))
 
 
