@@ -222,7 +222,7 @@ if(save.fig=='y') {savePlot(file.path(output.dir,paste('Historical.retrospective
 
 
 plot.fyr <- '2010'
-prev.assess.4.plot <- c("MT.2021","Bench.2017"); 
+prev.assess.4.plot <- c("MT.2023","MT.2021","Bench.2017"); 
 assess.name.labels <- assess.name.labels.all[c(names(current.assess), prev.assess.4.plot)]
 windows(height=8.0, width=5.0)
 par(mfcol=c(3,1))
@@ -250,14 +250,17 @@ ls()
 
 
 # ASAP details
-run.no <- '9'
+run.no <- '8'
 
 
 source("~/R/Directory_Paths.R")
+
+modeling.dir <- "C:/Users/kiersten.curti/Desktop"
 # Network modeling directory (containing previous assessments)
-modeling.dir <- file.path(mack.net.dir, 'Kiersten_Curti/Modeling')
+# modeling.dir <- file.path(mack.net.dir, 'Kiersten_Curti/Modeling')
+
 # Current assessment name
-current.assess.dir <- '2023.Management.Track'
+current.assess.dir <- '2025.Management.Track'
 
 # Current assessment name
 run.wd <- file.path(modeling.dir, current.assess.dir, paste('Run',run.no,sep=''))
