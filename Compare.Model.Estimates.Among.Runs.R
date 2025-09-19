@@ -70,7 +70,7 @@ plot.run.comparison <- function(var.name, var.label.name, plot.fyr, line.width, 
   ymax <- max(plot.data.mat$Hi)
   
   # Plot
-  windows()
+  windows(height=7, width=11)
   plot(plot.data[[1]]$Year, plot.data[[1]]$Estimate, ylim=c(0,ymax), axes=FALSE, xlab='', ylab='', type='l', col='black', cex=0.6, lwd=(line.width))
   polygon(x = c(plot.data[[1]]$Year, rev(plot.data[[1]]$Year)),
           y = c(plot.data[[1]]$Lo, rev(plot.data[[1]]$Hi)),
@@ -85,23 +85,19 @@ plot.run.comparison <- function(var.name, var.label.name, plot.fyr, line.width, 
   axis(side=2, at=axTicks(2), labels=TRUE, cex.axis=1.1, padj = 0.25)
   axis(side=1, at=axTicks(1), labels=TRUE, cex.axis=1.1, padj = -0.25)
   box()
-  mtext('Year', side=1, line=2.7, cex=1.0) 
-  mtext(var.label.name, side=2, line=2.7, cex=1.0) 
+  mtext('Year', side=1, line=2.7, cex=1.5) 
+  mtext(var.label.name, side=2, line=2.7, cex=1.5) 
 
-  if(legend.type=='final.first') {legend(legend.loc, names(run.list), bty="n", col=c('black',color.list[1:(length(run.list)-1)]),cex=0.9,lwd=2) }
-  if(legend.type=='ordered') {legend(legend.loc, c(names(run.list[2:length(run.list)]),names(run.list)[1]) , bty="n", col=c(color.list[1:(length(run.list)-1)], 'black'),cex=0.9,lwd=2) }
+  if(legend.type=='final.first') {legend(legend.loc, names(run.list), bty="n", col=c('black',color.list[1:(length(run.list)-1)]),cex=1.5,lwd=2) }
+  if(legend.type=='ordered') {legend(legend.loc, c(names(run.list[2:length(run.list)]),names(run.list)[1]) , bty="n", col=c(color.list[1:(length(run.list)-1)], 'black'),cex=1.5,lwd=2) }
 }
 
-
+  
 #############################
 
-
-run.list <- c(7,8)
-  names(run.list) <- c('Base','Added years')
-comp.name <- 'Runs7-8'
-# run.list <- c("4a","4b","4c")
-#   names(run.list) <- c('Updated catch','Catch and WAA','Fix WAA Outlier')
-# comp.name <- 'Runs4abc'
+run.list <- c(1,2)
+  names(run.list) <- c('2023 MT','Update Spring BTS')
+comp.name <- 'Runs1-2'
 
 run.ests <- prepare.run.ests(run.list=run.list)  
 
@@ -114,7 +110,6 @@ if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr
 
 plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
-
 
 plot.fyr <- 2010  
 plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
@@ -126,6 +121,42 @@ if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr
 plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
+plot.fyr <- 2000  
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
+
+
+run.list <- c(2,3)
+  names(run.list) <- c('Base','CAA as props')
+comp.name <- 'Runs2-3'
+
+run.ests <- prepare.run.ests(run.list=run.list)  
+
+plot.fyr <- 1968  
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
+
+plot.fyr <- 2010  
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
 plot.fyr <- 2000  
 plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
@@ -138,68 +169,116 @@ plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.f
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
 
-
-#########################
-
-
-run.list <- c(6,2:5)
-names(run.list) <- c('Updated egg index','Initial','Updated maturity','Updated WAA','Updated Catch')
-comp.name <- 'Runs2-6'
+run.list <- c(1,2,"4c")
+  names(run.list) <- c('2023 MT','Update Spring BTS', 'Update CAMS catch')
+comp.name <- 'Runs1-4c'
 
 run.ests <- prepare.run.ests(run.list=run.list)  
 
 plot.fyr <- 1968  
-plot.run.estimates(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='ordered')
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
 
-plot.run.estimates(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='ordered')
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
 
-plot.fyr <- 1975  
-plot.run.estimates(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='ordered')
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
+plot.fyr <- 2010  
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
 plot.fyr <- 2000  
-plot.run.estimates(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='ordered')
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
 
-plot.run.estimates(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='ordered')
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
 
-plot.run.estimates(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='ordered')
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
 
-#########################
-
-
-run.list <- c(9,6,7)
-names(run.list) <- c('Final (adjusted egg index weighting)','Updated Canadian data','Updated trawl survey indices')
-comp.name <- 'Runs6.7.9'
+run.list <- c("4c","5")
+  names(run.list) <- c('Updated CAMS catch','Updated egg index WAA')
+comp.name <- 'Runs4-5'
 
 run.ests <- prepare.run.ests(run.list=run.list)  
 
 plot.fyr <- 1968  
-plot.run.estimates(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='ordered')
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
 
-plot.run.estimates(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='ordered')
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
 
-plot.fyr <- 1975  
-plot.run.estimates(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='ordered')
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
+plot.fyr <- 2010  
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
 
 plot.fyr <- 2000  
-plot.run.estimates(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='ordered')
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
 
-plot.run.estimates(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='ordered')
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
 
-plot.run.estimates(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='ordered')
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
 if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
+
+
+run.list <- c("4c","5","6")
+  names(run.list) <- c('Updated CAMS catch','Updated egg index WAA', 'Updated 2022 egg index value')
+comp.name <- 'Runs4-6'
+
+run.ests <- prepare.run.ests(run.list=run.list)  
+
+plot.fyr <- 1968  
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
+
+plot.fyr <- 2010  
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
+
+plot.fyr <- 2000  
+plot.run.comparison(var.name='SSB', var.label.name='SSB (mt)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'SSB', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Freport', var.label.name='Fishing mortality', plot.fyr=plot.fyr, line.width=2, legend.loc='topleft', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'F', fig.type,sep='.')), type=fig.type) }
+
+plot.run.comparison(var.name='Recr', var.label.name='Recruitment (000s)', plot.fyr=plot.fyr, line.width=2, legend.loc='topright', legend.type='final.first')
+if(save.fig=='y') { savePlot(file.path(comp.dir, paste(comp.name,'fyr', plot.fyr,'Rect', fig.type,sep='.')), type=fig.type) }
+
+
 
 
