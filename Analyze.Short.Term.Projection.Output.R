@@ -8,16 +8,16 @@ ls()
 
 
 # Run details
-run.no <- '9'
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+run.no <- '8'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 
 
 # Projection details
 
 rect.name <- 'Rect.2Stanza' #   'Rect.2009' # 
-f.name <- 'F21' # 'FMSY' # 
+f.name <- 'F20' # 'FMSY' # 
 
-proj.dir.name <- 'rebuilding/Base'
+proj.dir.name <- 'rebuilding'
 proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
 
 
@@ -26,8 +26,8 @@ proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.nam
 quant.values <- c(0.025, 0.05, 0.40, 0.75, 0.95, 0.975)
 
 # Corresponding percentiles for summary table
-table.percentiles <- c('5%','40%','75%','95%')
-  names(table.percentiles) <- c('5th Percentile', '40th Percentile', '75th Percentile', '95th Percentile')
+table.percentiles <- c('5%','40%','95%')
+  names(table.percentiles) <- c('5th Percentile', '40th Percentile', '95th Percentile')
 # table.percentiles <- c('5%','75%','95%')
 #   names(table.percentiles) <- c('5th Percentile', '75th Percentile', '95th Percentile')
   
