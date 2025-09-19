@@ -23,7 +23,7 @@ f.name <- 'F20' #   'F13' #
 
 
 ### Runs to determine Frebuild
-proj.master.folder <- c('projections.rebuilding')
+proj.master.folder <- c('projections.short.term')
 proj.master.dir <- file.path(run.dir, proj.master.folder)
 # proj.dir <- file.path(proj.master.dir)
 proj.dir <- file.path(proj.master.dir, f.name)

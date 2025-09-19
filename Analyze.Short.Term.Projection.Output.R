@@ -17,7 +17,7 @@ current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 rect.name <- 'Rect.2Stanza' #   'Rect.2009' # 
 f.name <- 'F20' # 'FMSY' # 
 
-proj.dir.name <- 'rebuilding'
+proj.dir.name <- 'short.term'
 proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
 
 
