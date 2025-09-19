@@ -23,10 +23,10 @@ param.vec <- seq(0.05,0.75,0.01)
     
 
 ### Paths to directories with original ASAP dat files and original ASAP dat file names
-orig.fname <- 'Run9'
+orig.fname <- 'Run8'
 
 git.dir <- 'C:/Users/Kiersten.Curti/Documents/GitHub.Repositories/ASAP.AGEPRO.pre-post-processing'
-assess.dir <- 'C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track'
+assess.dir <- 'C:/Users/kiersten.curti/Desktop/2025.Management.Track'
 orig.dir <- file.path(assess.dir,orig.fname)
 
 
