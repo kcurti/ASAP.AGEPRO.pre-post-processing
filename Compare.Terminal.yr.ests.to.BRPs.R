@@ -31,7 +31,7 @@ output.dir <- file.path(run.dir,'outputs')
 load( file.path(proj.dir, 'Projection.summary.RDATA') )
 load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
 
-fmort.name <- rownames(terminal.yr.ests)[4]
+fmort.name <- rownames(terminal.yr.ests)[3]
 
 
 ### Annual estimates to use in the plot (specified above as either the median MCMC estimates or the ASAP point estimates)
@@ -93,7 +93,10 @@ text(x=(ssb.brp/1000), y=1.7, labels=bquote('SSB'['40%'] ~ '= SSB'['MSY PROXY'] 
 # Fmsy
 text(x=700, y=f.brp, labels=bquote('F'['40%'] ~ '= F'['MSY PROXY'] ~ '=' ~ .(f.brp)), cex= 0.8, pos=3)
 
-if(save.fig == 'y'){savePlot(file.path(output.dir, 'Phase.plot.png'),type='png')}
+if(save.fig == 'y'){
+  savePlot(file.path(output.dir, 'Phase.plot.png'),type='png')
+  savePlot(file.path(output.dir, 'Phase.plot.wmf'),type='wmf')
+  }
 
 
 
@@ -143,7 +146,12 @@ text(x=(ssb.brp/1000), y=1.7, labels=bquote('SSB'['40%'] ~ '= SSB'['MSY PROXY'] 
 # Fmsy
 text(x=700, y=f.brp, labels=bquote('F'['40%'] ~ '= F'['MSY PROXY'] ~ '=' ~ .(f.brp)), cex= 0.8, pos=3)
 
-if(save.fig == 'y'){savePlot(file.path(output.dir, 'Phase.plot.with.cis.png'),type='png')}
+if(save.fig == 'y')
+{
+  savePlot(file.path(output.dir, 'Phase.plot.with.cis.png'),type='png')
+  savePlot(file.path(output.dir, 'Phase.plot.with.cis.wmf'),type='wmf')
+}
+
 
 
 
@@ -169,9 +177,9 @@ save.image(file.path(output.dir, 'Comparison.with.BRPs.RDATA'))
 rm(list=ls())
 ls()
 
-run.no <- '7'
+run.no <- '8'
 
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 run.wd <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.wd,'outputs')
 
