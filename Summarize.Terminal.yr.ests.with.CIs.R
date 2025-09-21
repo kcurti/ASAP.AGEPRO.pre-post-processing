@@ -110,11 +110,19 @@ write.csv(median.annual.ests, file.path(output.dir, paste('Run',run.no,'.Annual.
 rm(list=ls())
 ls()
 
-run.no <- '9'
+run.no <- '8'
 
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2023.Management.Track')
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.dir,'outputs')
 load( file.path(output.dir, paste('Run',run.no,'.Summary.Tables.with.CIs.RDATA',sep='')) )
 
+### Read in std file
+asap.std <- read.table(file.path(run.dir, paste0(asap.name, ".std")), header = F, skip = 1, sep = "")
+  names(asap.std) <- c("index", "name", "value", "stdev")
+rect <- asap.std[substr(asap.std$name, 1, 8) == 'recruits',] %>%
+  mutate(year = fyr:lyr,
+         cv = stdev/value)
+rect$year <- fyr:lyr
+rect$cv <- stdev/value
 
