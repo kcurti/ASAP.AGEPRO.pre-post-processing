@@ -98,11 +98,21 @@ write.csv(recruits.75onward,  file.path(proj.dir, 'Rect.for.projections.csv'))
 rm(list=ls())
 ls()
 
-run.no <- '7'
-current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/Work/Mackerel/2023.Management.Track')
+run.no <- '8'
+current.assess.dir <- c('C:/Users/Kiersten.Curti/Desktop/2025.Management.Track')
 
 run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 proj.dir <- file.path(run.dir,'projections.brps')
 load(file.path(proj.dir, 'ASAP.Data.For.Projections.RDATA'))
 
+avg.nyrs <- 2
+avg.yrs <- tail(yrs, avg.nyrs)
+jan1.waa.summary  <- calc.cv.for.yr.age.mat(asap$WAA.mats$WAA.jan1[avg.yrs,])
+ssb.waa.summary   <- calc.cv.for.yr.age.mat(asap$WAA.mats$WAA.ssb[avg.yrs,])
+catch.waa.summary <- calc.cv.for.yr.age.mat(asap$WAA.mats$WAA.catch.fleet1[avg.yrs,])
+maturity.summary <- calc.cv.for.yr.age.mat(asap$maturity[avg.yrs,])
 
+# write.csv(do.call(rbind, jan1.waa.summary),   file.path(proj.dir, 'Avg.2Yrs.Jan1.WAA.for.projections.csv'))
+# write.csv(do.call(rbind, ssb.waa.summary),    file.path(proj.dir, 'Avg.2Yrs.SSB.WAA.for.projections.csv'))
+# write.csv(do.call(rbind, catch.waa.summary),  file.path(proj.dir, 'Avg.2Yrs.Catch.WAA.for.projections.csv'))
+# write.csv(do.call(rbind, maturity.summary),  file.path(proj.dir, 'Avg.2Yrs.Maturity.for.projections.csv'))
