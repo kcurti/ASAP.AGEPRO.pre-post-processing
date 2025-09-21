@@ -142,5 +142,61 @@ write.csv(combined.table, file.path(proj.dir, paste(f.name, rect.name, 'Short.te
 ####################################################################
 
 
+##### AgePro analyze NAA (xx1) file #####
 
-# load(file.path(proj.dir, paste(f.name, rect.name, 'Projection.summary.RDATA', sep='.')))
+rm(list=ls())
+ls()
+
+
+# Run details
+run.no <- '8'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
+
+# Projection details
+rect.name <- 'Rect.2Stanza' #   'Rect.2009' # 
+f.name <- 'F20' # 'FMSY' # 
+
+proj.dir.name <- 'short.term'
+proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
+
+
+### set directories and the agepro file name (proj.fname) based on above inputs
+run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+proj.master.folder <- paste('projections',proj.dir.name, sep='.')
+proj.master.dir <- file.path(run.dir, proj.master.folder)
+proj.dir <- file.path(proj.master.dir, f.name)
+naa.dir <- file.path(proj.master.dir, f.name, "With_NAA")
+
+load(file.path(proj.dir, paste(f.name, rect.name, 'Projection.summary.RDATA', sep='.')))
+
+min.age <- rdat$genparms$minage
+max.age <- rdat$genparms$maxage
+ages <- as.character(min.age:max.age)
+
+# NAA (xx2)
+niter <- rdat$genparms$nsims * rdat$genparms$nboot
+nyrs <- length(proj.yrs)
+naa <- read.table(file.path(naa.dir, paste(proj.fname,'xx1',sep='.')))
+  colnames(naa) <- ages
+nrow(naa)
+niter*nyrs
+
+naa$Year <- rep(proj.yrs, niter)
+naa$Iteration <- rep(1:niter, each=nyrs)
+  
+library(tidyverse)
+
+naa.median <- 
+  naa %>%
+  group_by(Year) %>%
+  summarize(across(as.character(1:10),median))
+
+year.class <- tibble(Year=as.integer(proj.yrs))
+for(age in ages)
+{
+  year.class <- bind_cols(year.class, age=as.integer(proj.yrs)-as.integer(age))
+}
+colnames(year.class) <- c("Year",ages)
+
+
+
