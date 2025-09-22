@@ -238,7 +238,7 @@ paper.fish <-
   )
 
 ssb.paper.fish <- full_join(ssb, paper.fish) %>%
-  group_by(Year, category) %>%
-  summarize(SSB.mt = sum(SSB.mt))
-  
+  group_by(Year, category) 
+  # summarize(SSB.mt = sum(SSB.mt))
+  # 
 
