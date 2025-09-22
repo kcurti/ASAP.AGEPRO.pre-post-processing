@@ -173,30 +173,72 @@ min.age <- rdat$genparms$minage
 max.age <- rdat$genparms$maxage
 ages <- as.character(min.age:max.age)
 
-# NAA (xx2)
+
+### NAA (xx2)
+
 niter <- rdat$genparms$nsims * rdat$genparms$nboot
 nyrs <- length(proj.yrs)
-naa <- read.table(file.path(naa.dir, paste(proj.fname,'xx1',sep='.')))
-  colnames(naa) <- ages
-nrow(naa)
+naa.wide <- read.table(file.path(naa.dir, paste(proj.fname,'xx1',sep='.')))
+  colnames(naa.wide) <- ages
+nrow(naa.wide)
 niter*nyrs
 
-naa$Year <- rep(proj.yrs, niter)
-naa$Iteration <- rep(1:niter, each=nyrs)
+naa.wide$Year <- rep(proj.yrs, niter)
+naa.wide$Iteration <- rep(1:niter, each=nyrs)
   
 library(tidyverse)
 
-naa.median <- 
-  naa %>%
+naa.wide.median <- 
+  naa.wide %>%
   group_by(Year) %>%
   summarize(across(as.character(1:10),median))
 
-year.class <- tibble(Year=as.integer(proj.yrs))
-for(age in ages)
-{
-  year.class <- bind_cols(year.class, age=as.integer(proj.yrs)-as.integer(age))
-}
-colnames(year.class) <- c("Year",ages)
+year.class <- 
+  bind_cols(
+    Year=rep(as.integer(proj.yrs), times=length(ages)),
+    Age=rep(as.integer(ages), each=length(proj.yrs))
+    ) %>%
+  mutate(Year.class = Year-Age)
+year.class.wide <- pivot_wider(year.class, names_from=Age, values_from=Year.class)
+
+naa <- pivot_longer(naa.wide, cols=ages, names_to="Age", values_to="NAA")
+naa.median <- naa %>%
+  group_by(Year, Age) %>%
+  summarize(NAA.median = median(NAA)) %>%
+  mutate(Age = as.integer(Age),
+         Year = as.integer(Year))
 
 
+### Import biological inputs and calculate SSB
+
+inputs <- new.env()
+load(file.path(run.dir, "projections.brps", 'ASAP.Data.For.Projections.RDATA'), envir=inputs)
+
+maturity <- data.frame(maturity = inputs$maturity.summary$avg)
+  maturity$Age <- as.integer(names(inputs$maturity.summary$avg))
+waa <- data.frame(WAA = inputs$ssb.waa.summary$avg)
+  waa$Age <- as.integer(names(inputs$ssb.waa.summary$avg))
+
+ssb <- full_join(naa.median, maturity) %>%
+  full_join(., waa) %>%
+  mutate(SSB.kg = NAA.median * maturity * WAA,
+         SSB.mt = SSB.kg/1000)
+  
+
+### Create labels for paper fish
+  
+paper.fish <- 
+  year.class %>%
+  mutate(category = 
+           case_when(
+             Year.class == 2024 ~ "terminal.yr",
+             Year.class > 2024 ~ "projected",
+             Year.class < 2024 ~ "estimated"
+             )
+  )
+
+ssb.paper.fish <- full_join(ssb, paper.fish) %>%
+  group_by(Year, category) %>%
+  summarize(SSB.mt = sum(SSB.mt))
+  
 
