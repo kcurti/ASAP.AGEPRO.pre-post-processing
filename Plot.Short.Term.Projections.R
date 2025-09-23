@@ -390,7 +390,7 @@ tidy.proj.series <- bind_rows(proj.series.tmp, .id="Estimate")
 
 plot.data <- bind_rows(tidy.merged.asap, tidy.proj.series)
 
-windows(width=11, height=8)
+windows(width=8, height=6)
 
 plot.data %>% 
   filter(Year >=plot.fyr) %>%
@@ -425,14 +425,14 @@ ylab("Recruitment (000s)") +
   geom_hline(yintercept=rect.at.brp/1000, lty=2) +
   annotate(
     "text",
-    x=plot.fyr+5,
-    y=(rect.at.brp/1000 - 30000),
-    label=bquote('Long-term (100-yr) median recruitment' ~ '=' ~ .(format(round((rect.at.brp/1000),0),big.mark=',')))
+    x=plot.fyr+12,
+    y=(0),
+    label=bquote('Median recruitment' ~ '=' ~ .(format(round((rect.at.brp/1000),0),big.mark=',')))
   )
 
 
 # if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.SSB.ests','fyr',plot.fyr,'png',sep='.'))) }
-if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.Catch.ests','fyr',plot.fyr,'png',sep='.'))) }
+# if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.Catch.ests','fyr',plot.fyr,'png',sep='.'))) }
 if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.Rect.ests','fyr',plot.fyr,'png',sep='.'))) }
 
 
