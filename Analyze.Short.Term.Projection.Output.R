@@ -201,7 +201,7 @@ year.class <-
   mutate(Year.class = Year-Age)
 year.class.wide <- pivot_wider(year.class, names_from=Age, values_from=Year.class)
 
-naa <- pivot_longer(naa.wide, cols=ages, names_to="Age", values_to="NAA")
+naa <- pivot_longer(naa.wide, cols=all_of(ages), names_to="Age", values_to="NAA")
 naa.median <- naa %>%
   group_by(Year, Age) %>%
   summarize(NAA.median = median(NAA)) %>%
@@ -241,4 +241,10 @@ ssb.paper.fish <- full_join(ssb, paper.fish) %>%
   group_by(Year, category) 
   # summarize(SSB.mt = sum(SSB.mt))
   # 
+
+save.image(file.path(naa.dir, paste(f.name, rect.name, 'Paper.fish.summary.RDATA', sep='.')))
+
+rm(naa.wide, naa)
+save.image(file.path(naa.dir, paste(f.name, rect.name, 'Paper.fish.summary.streamline.RDATA', sep='.')))
+
 
