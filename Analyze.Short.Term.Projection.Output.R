@@ -231,9 +231,9 @@ paper.fish <-
   year.class %>%
   mutate(category = 
            case_when(
-             Year.class == 2024 ~ "terminal.yr",
-             Year.class > 2024 ~ "projected",
-             Year.class < 2024 ~ "estimated"
+             Year.class == 2023 ~ "terminal.yr",
+             Year.class > 2023 ~ "projected",
+             Year.class < 2023 ~ "estimated"
              )
   )
 
@@ -247,4 +247,103 @@ save.image(file.path(naa.dir, paste(f.name, rect.name, 'Paper.fish.summary.RDATA
 rm(naa.wide, naa)
 save.image(file.path(naa.dir, paste(f.name, rect.name, 'Paper.fish.summary.streamline.RDATA', sep='.')))
 
+
+
+
+##### Plots #####
+
+
+rm(list=ls())
+ls()
+
+
+# Run details
+run.no <- '8'
+current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
+
+# Projection details
+rect.name <- 'Rect.2Stanza' #   'Rect.2009' # 
+f.name <- 'F20' # 'FMSY' # 
+
+proj.dir.name <- 'short.term'
+proj.fname <- paste('PROJECTIONS.THROUGH2032', toupper(rect.name), toupper(f.name), sep='.')
+
+
+### set directories and the agepro file name (proj.fname) based on above inputs
+run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+proj.master.folder <- paste('projections',proj.dir.name, sep='.')
+proj.master.dir <- file.path(run.dir, proj.master.folder)
+proj.dir <- file.path(proj.master.dir, f.name)
+naa.dir <- file.path(proj.master.dir, f.name, "With_NAA")
+
+load(file.path(naa.dir, paste(f.name, rect.name, 'Paper.fish.summary.streamline.RDATA', sep='.')))
+
+
+windows(height=7.5, width=6)
+
+dat <- ssb.paper.fish %>%
+  ungroup() %>%
+  mutate(
+    Category = factor(category,
+                      levels = c('projected', 'terminal.yr', 'estimated')),
+    Cohort = Year - Age,
+    Cohort = factor(Cohort, levels = max(Cohort):min(Cohort))
+  ) %>%
+  group_by(Year) %>%
+  mutate(
+    Proportion = SSB.mt / sum(SSB.mt),
+    Proportion = SSB.mt / sum(SSB.mt),
+    year_class_flag = ifelse(Cohort == '2023', '2023', 'other_year') %>% 
+      factor()
+  ) %>%
+  ungroup()
+
+p1 <- dat %>%
+  ggplot(aes(x = Year, y = SSB.mt, fill = Category)) +
+  geom_col() +
+  theme_bw()
+
+p2 <- dat %>%
+  ggplot(aes(x = Year, y = Proportion, fill = Category)) +
+  geom_col() +
+  theme_bw()
+
+library(patchwork)
+p1 / p2 + plot_layout(guides = "collect")
+
+
+windows(height=7.5, width=6)
+
+dat <- ssb.paper.fish %>%
+  ungroup() %>%
+  mutate(
+    category = factor(category,
+                      levels = c('projected', 'terminal.yr', 'estimated')),
+    Cohort = Year - Age,
+    Cohort = factor(Cohort, levels = max(Cohort):min(Cohort))
+  ) %>%
+  group_by(Year) %>%
+  mutate(
+    PROP_SSB.mt = SSB.mt / sum(SSB.mt),
+    year_class_flag = ifelse(Cohort == '2023', '2023', 'other_year') %>% 
+      factor()
+  ) %>%
+  ungroup()
+
+col <- c('2023' = 'black', 'other_year' = '#FF000000')
+p3 <- dat %>%
+  ggplot(aes(x = Year, y = SSB.mt, fill = Cohort, col = year_class_flag)) +
+  geom_col() +
+  scale_color_manual(values = col) +
+  guides(color = "none") +
+  theme_bw()
+
+p4 <- dat %>%
+  ggplot(aes(x = Year, y = PROP_SSB.mt, fill = Cohort, col = year_class_flag)) +
+  geom_col() +
+  scale_color_manual(values = col) +
+  guides(color = "none") +
+  theme_bw()
+
+p3 / p4 + plot_layout(guides = "collect")
 
