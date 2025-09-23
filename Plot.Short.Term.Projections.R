@@ -300,32 +300,32 @@ write.csv(catch.proj.lyr, file.path(base.proj.dir, 'Median.Catch.proj.lyr.csv'))
 # 
 # ### Load workspace
 # 
-rm(list=ls())
-ls()
-
-run.no <- '4'
-proj.folder.name <- 'rebuilding/Updated.Projections.March2022' 
-rdata.name <- 'Rebuilding.projections.March2022'
-
-current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
-run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
-
-proj.master.folder <- paste('projections',proj.folder.name, sep='.')
-base.proj.dir <- file.path(run.dir, proj.master.folder)
-
-setwd(base.proj.dir)
-load(paste(rdata.name, 'Proj.Summary.RDATA', sep='.'))
-
-
-########## Plot two alternatives under final consideration ###########
-
-
-proj.name.list <- c(
-  'Rect 2 Stanza, 60% prob rebuild',
-  'Rect 2 stanza, P* at Fmsy'
-)
-
-n.proj <- length(proj.name.list)
+# rm(list=ls())
+# ls()
+# 
+# run.no <- '4'
+# proj.folder.name <- 'rebuilding/Updated.Projections.March2022' 
+# rdata.name <- 'Rebuilding.projections.March2022'
+# 
+# current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/Work/Mackerel/2021.MT.Modeling')
+# run.dir <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
+# 
+# proj.master.folder <- paste('projections',proj.folder.name, sep='.')
+# base.proj.dir <- file.path(run.dir, proj.master.folder)
+# 
+# setwd(base.proj.dir)
+# load(paste(rdata.name, 'Proj.Summary.RDATA', sep='.'))
+# 
+# 
+# ########## Plot two alternatives under final consideration ###########
+# 
+# 
+# proj.name.list <- c(
+#   'Rect 2 Stanza, 60% prob rebuild',
+#   'Rect 2 stanza, P* at Fmsy'
+# )
+# 
+# n.proj <- length(proj.name.list)
 
 
 ##########################
@@ -333,6 +333,40 @@ n.proj <- length(proj.name.list)
 #### Second figure retry in ggplot: Projections only to new model terminal year
 
 library(tidyverse)
+
+# var.name <- 'rect';  yaxis.label <- 'Recruitment (000s)';  plot.fyr <- 2000;  legend.location <- 'topright'
+
+# var.name <- 'ssb';   yaxis.label <- 'SSB (mt)';            plot.fyr <- 1980;  legend.location <- 'topright'
+var.name <- 'catch';   yaxis.label <- 'Catch (mt)';            plot.fyr <- 1980;  legend.location <- 'topright'
+
+# Get final estimates
+var.asap <- model.ests[,var.name,drop=FALSE]
+colnames(var.asap) <- 'Estimate'
+# Get CIs    
+if(var.name != 'catch')  
+{
+  mcmc.var.list <- paste(var.name,c('lo','hi'),sep='.')
+  mcmc <- mcmc.ests[,mcmc.var.list]
+  colnames(mcmc) <- c('X5th','X95th')
+}  else {
+  mcmc <- cbind(var.asap,var.asap)
+  colnames(mcmc) <- c('X5th','X95th')
+}
+
+# Merge  
+merged.asap <- merge(var.asap[as.character(plot.fyr:lyr),,drop=FALSE], mcmc[as.character(plot.fyr:lyr),], by="row.names",all=TRUE)
+rownames(merged.asap) <- merged.asap$'Row.names'
+colnames(merged.asap)[colnames(merged.asap)=='Row.names'] <- 'Year'
+
+# Get projection estimates
+proj.series <- get(paste(var.name,'proj',sep='.'))   
+
+# # Determine figure xlim, ylim
+# asap.max <- max(merged.asap[,!colnames(merged.asap)=='Year'])  
+# proj.max <- max(do.call(rbind,proj.series))  
+# y.lim <- c(0, max(c(asap.max, proj.max)) )
+# x.lim <- c(plot.fyr,proj.lyr)
+
 
 tidy.merged.asap <- tibble(merged.asap) %>%
   rename(Percentile5 = X5th,
@@ -346,7 +380,7 @@ proj.series.tmp <- lapply(proj.series,
                             as_tibble(t(x)) %>%
                               rename(Percentile5 = '5th Percentile',
                                      Percentile40 = '40th Percentile',
-                                     Percentile75 = '75th Percentile',
+                                     #Percentile75 = '75th Percentile',
                                      Percentile95 = '95th Percentile') %>%
                               mutate(Year = as.integer(colnames(x))) %>%
                               bind_rows(., tidy.merged.asap%>%filter(Year==lyr))
@@ -357,19 +391,38 @@ tidy.proj.series <- bind_rows(proj.series.tmp, .id="Estimate")
 plot.data <- bind_rows(tidy.merged.asap, tidy.proj.series)
 
 windows(width=11, height=8)
+
 plot.data %>% 
-  filter(Year >=2010) %>%
+  filter(Year >=plot.fyr) %>%
   ggplot(aes(Year, Median)) +
   theme(text = element_text(size=13)) +
   geom_line(aes(color=Estimate)) +
   geom_ribbon(aes(ymin = Percentile5, ymax = Percentile95, fill=Estimate), alpha = 0.2, linetype='blank') +
-  ylab("SSB (mt)") + 
   theme(legend.position = "none") +
-  geom_hline(yintercept=ssb.brp, lty=2) +
-  annotate(
-    "text",
-    x=2015,
-    y=ssb.brp+10000,
-    label=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt')
-  )
+  
+  ### SSB
+  # ylab("SSB (mt)") + 
+  # geom_hline(yintercept=ssb.brp, lty=2) +
+  # annotate(
+  #   "text",
+  #   x=2015,
+  #   y=ssb.brp+10000,
+  #   label=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt')
+  # ) + 
+  
+  ### Catch
+  ylab("Catch (mt)") + 
+  geom_hline(yintercept=catch.brp, lty=2) +
+annotate(
+  "text",
+  x=2015,
+  y=catch.brp+-2000,
+  label=bquote('MSY'['PROXY'] ~ '=' ~ .(format(round((catch.brp),0),big.mark=',')) ~ 'mt')
+)
 
+
+# if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.SSB.ests','fyr',plot.fyr,'png',sep='.'))) }
+if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.Catch.ests','fyr',plot.fyr,'png',sep='.'))) }
+
+
+pivot_longer(tibble(ssb.proj$`Fmsy proxy`["Median",]), cols=all_of(colnames(ssb.proj$`Fmsy proxy`)), names_to="Year", values_to="SSB")
