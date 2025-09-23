@@ -334,10 +334,10 @@ write.csv(catch.proj.lyr, file.path(base.proj.dir, 'Median.Catch.proj.lyr.csv'))
 
 library(tidyverse)
 
-# var.name <- 'rect';  yaxis.label <- 'Recruitment (000s)';  plot.fyr <- 2000;  legend.location <- 'topright'
+# var.name <- 'ssb';     yaxis.label <- 'SSB (mt)';            plot.fyr <- 1980;  legend.location <- 'topright'
+# var.name <- 'catch';   yaxis.label <- 'Catch (mt)';          plot.fyr <- 1980;  legend.location <- 'topright'
+var.name <- 'rect';  yaxis.label <- 'Recruitment (000s)';  plot.fyr <- 1980;  legend.location <- 'topright'
 
-# var.name <- 'ssb';   yaxis.label <- 'SSB (mt)';            plot.fyr <- 1980;  legend.location <- 'topright'
-var.name <- 'catch';   yaxis.label <- 'Catch (mt)';            plot.fyr <- 1980;  legend.location <- 'topright'
 
 # Get final estimates
 var.asap <- model.ests[,var.name,drop=FALSE]
@@ -408,21 +408,32 @@ plot.data %>%
   #   x=2015,
   #   y=ssb.brp+10000,
   #   label=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt')
-  # ) + 
+  # )  
   
-  ### Catch
-  ylab("Catch (mt)") + 
-  geom_hline(yintercept=catch.brp, lty=2) +
-annotate(
-  "text",
-  x=2015,
-  y=catch.brp+-2000,
-  label=bquote('MSY'['PROXY'] ~ '=' ~ .(format(round((catch.brp),0),big.mark=',')) ~ 'mt')
-)
+  # ### Catch
+  # ylab("Catch (mt)") + 
+  # geom_hline(yintercept=catch.brp, lty=2) +
+  # annotate(
+  # "text",
+  # x=2015,
+  # y=catch.brp+-2000,
+  # label=bquote('MSY'['PROXY'] ~ '=' ~ .(format(round((catch.brp),0),big.mark=',')) ~ 'mt')
+  # )
+
+### Rect
+ylab("Recruitment (000s)") + 
+  geom_hline(yintercept=rect.at.brp/1000, lty=2) +
+  annotate(
+    "text",
+    x=plot.fyr+5,
+    y=(rect.at.brp/1000 - 30000),
+    label=bquote('Long-term (100-yr) median recruitment' ~ '=' ~ .(format(round((rect.at.brp/1000),0),big.mark=',')))
+  )
 
 
 # if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.SSB.ests','fyr',plot.fyr,'png',sep='.'))) }
 if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.Catch.ests','fyr',plot.fyr,'png',sep='.'))) }
+if(save.fig=='y') { ggsave(file.path(base.proj.dir, paste('GGplot.projected.Rect.ests','fyr',plot.fyr,'png',sep='.'))) }
 
 
 pivot_longer(tibble(ssb.proj$`Fmsy proxy`["Median",]), cols=all_of(colnames(ssb.proj$`Fmsy proxy`)), names_to="Year", values_to="SSB")
