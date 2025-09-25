@@ -31,8 +31,10 @@ proj.dir <- file.path(run.dir, paste('projections',proj.name,sep='.'), F.name)
 ### Previous run directories and file names
 prev.assess.dir <- file.path(modeling.dir, '2023.Management.Track')
 prev.run.dir <- file.path(prev.assess.dir, 'Run9')
-prev.proj.dir <- file.path(prev.run.dir,'projections.rebuilding/Base/F11')
+prev.proj.dir <- file.path(prev.run.dir,'projections.rebuilding/Base/F11_UpdatedWithRealizedCatch')
 prev.proj.fname <- 'F11.Rect.2Stanza.Projection.Summary.RDATA'
+# prev.proj.dir <- file.path(prev.run.dir,'projections.rebuilding/Age2.35Percent.AvgABC.F07/AvgABC_3200mt_UpdatedWithRealizedCatch')
+# prev.proj.fname <- 'F07.Rect.2Stanza.Projection.summary.RDATA'
 
 
 ### Load current model estimates (via historical retrospective workspace)
@@ -275,6 +277,7 @@ plot.data %>%
     label=bquote('SSB'['MSY PROXY'] ~ '=' ~ 'SSB'['40%'] ~ '=' ~ .(format(round((ssb.brp),0),big.mark=',')) ~ 'mt')
   )
 if(save.fig=='y') { ggsave(file.path(proj.dir, paste('GGplot.SSB.ests','fyr',plot.fyr,'with.historical.sub.png',sep='.'))) }
+# if(save.fig=='y') { ggsave(file.path(proj.dir, paste('GGplot.SSB.ests','fyr',plot.fyr,'with.historical.sub.reduced.2022.rect.png',sep='.'))) }
 
 
 save.image(file.path(proj.dir, "Historical.Retro.With.Projections.RDATA"))
