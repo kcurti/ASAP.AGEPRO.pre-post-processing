@@ -180,11 +180,14 @@ ls()
 run.no <- '8'
 
 current.assess.dir <- c('C:/Users/kiersten.curti/Desktop/2025.Management.Track')
+
+mcmc.folder.name <- 'mcmc.2000.it.1000.thin'
+
 run.wd <- file.path(current.assess.dir, paste('Run',run.no,sep=''))
 output.dir <- file.path(run.wd,'outputs')
-
-
 load(file.path(output.dir, 'Comparison.with.BRPs.RDATA'))
+
+mcm <- read_table(file.path(run.dir, mcmc.folder.name, paste0("RUN",run.no,".MCMC.MCM"))) 
 
 
 
